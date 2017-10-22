@@ -2177,9 +2177,9 @@ husky@^0.14.3:
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
 
-i18n-locales@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/i18n-locales/-/i18n-locales-0.0.1.tgz#4a9e9a505e0d4c0bb2cdbe693569a718425fee57"
+i18n-locales@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/i18n-locales/-/i18n-locales-0.0.2.tgz#12e56046f1fa260e11658f4ac62f60b363479ff9"
 
 i18n@^0.8.3:
   version "0.8.3"
