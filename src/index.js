@@ -1,4 +1,4 @@
-const { resolve } = require('path');
+const { extname, resolve } = require('path');
 const isEmpty = require('lodash.isempty');
 const sortBy = require('lodash.sortby');
 const every = require('lodash.every');
@@ -161,6 +161,9 @@ class I18N {
   }
 
   async redirect(ctx, next) {
+    // do not redirect static paths
+    if (extname(ctx.path) !== '') return next();
+
     // inspired by nodejs.org language support
     // <https://github.com/nodejs/nodejs.org/commit/d6cdd942a8fc0fffcf6879eca124295e95991bbc#diff-78c12f5adc1848d13b1c6f07055d996eR59>
     const locale = ctx.url.split('/')[1].split('?')[0];
