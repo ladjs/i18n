@@ -1,4 +1,4 @@
-const { extname, resolve } = require('path');
+const { resolve } = require('path');
 const isEmpty = require('lodash.isempty');
 const sortBy = require('lodash.sortby');
 const every = require('lodash.every');
@@ -79,9 +79,6 @@ class I18N {
   }
 
   middleware(ctx, next) {
-    // return early if its not a pure path (e.g. ignore static assets)
-    if (extname(ctx.path) !== '') return next();
-
     const { locales, defaultLocale, phrases, cookie } = this.config;
 
     // expose api methods to `ctx.req` and `ctx.state`
