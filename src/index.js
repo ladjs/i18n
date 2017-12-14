@@ -84,6 +84,12 @@ class I18N {
     // expose api methods to `ctx.req` and `ctx.state`
     i18n.init(ctx.req, ctx.state);
 
+    // expose a helper function to `ctx.state.l`
+    // which prefixes a link/path with the locale
+    ctx.state.l = (path = '') => {
+      return `/${ctx.state.locale}${path}`;
+    };
+
     // override the existing locale detection with our own
     // in order of priority:
     //
