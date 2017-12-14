@@ -75,6 +75,7 @@ It also exposes the following:
 * `ctx.pathWithoutLocale` - the `ctx.path` without the locale in it (this is used by [koa-meta][])
 * `ctx.req` - with all of `i18n` API methods (e.g. `ctx.req.t`, `ctx.req.tn`, ...)
 * `ctx.state` - with all of `i18n` API methods (e.g. `ctx.req.t`, `ctx.req.tn`, ...)
+* `ctx.state.l` - a shorthand method that accepts a path and returns a localized path (e.g. `ctx.state.l('/contact')` will output `/en/contact` if the locale is "en")
 * `ctx.state.availableLanguages` (Array) - which is useful for adding a dropdown to select from an available language
 * `ctx.state.currentLanguage` (String) - the current locale's language in native language using [country-language][]'s `getLanguage` method.
 * `ctx.translate` (Function) - a helper function for calling `i18n.api.t` to translate a given phrase (same as `i18n.translate` except it throws a `ctx.throw` error using [Boom][])
@@ -138,7 +139,7 @@ For a list of all available locales see [i18n-locales][].
 [MIT](LICENSE) © [Nick Baugh](http://niftylettuce.com/)
 
 
-## 
+##
 
 [npm]: https://www.npmjs.com/
 
