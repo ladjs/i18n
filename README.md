@@ -140,7 +140,7 @@ For a list of all available locales see [i18n-locales][].
 [MIT](LICENSE) © [Nick Baugh](http://niftylettuce.com/)
 
 
-##
+## 
 
 [npm]: https://www.npmjs.com/
 
