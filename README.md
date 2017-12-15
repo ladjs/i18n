@@ -74,6 +74,7 @@ It also exposes the following:
 
 * `ctx.pathWithoutLocale` - the `ctx.path` without the locale in it (this is used by [koa-meta][])
 * `ctx.req` - with all of `i18n` API methods (e.g. `ctx.req.t`, `ctx.req.tn`, ...)
+* `ctx.locale` - set to the value of `ctx.req.locale` (the current user's locale)
 * `ctx.state` - with all of `i18n` API methods (e.g. `ctx.req.t`, `ctx.req.tn`, ...)
 * `ctx.state.l` - a shorthand method that accepts a path and returns a localized path (e.g. `ctx.state.l('/contact')` will output `/en/contact` if the locale is "en")
 * `ctx.state.availableLanguages` (Array) - which is useful for adding a dropdown to select from an available language
