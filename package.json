@@ -16,9 +16,7 @@
     "country-language": "^0.1.7",
     "i18n": "^0.8.3",
     "i18n-locales": "^0.0.2",
-    "lodash.every": "^4.6.0",
-    "lodash.isempty": "^4.4.0",
-    "lodash.sortby": "^4.7.0",
+    "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "qs": "^6.5.1",
     "underscore.string": "^3.3.4"
