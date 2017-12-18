@@ -27,34 +27,49 @@
     "babel-preset-env": "^1.6.1",
     "codecov": "^3.0.0",
     "cross-env": "^5.0.5",
+    "debug": "^3.1.0",
     "eslint": "^4.5.0",
     "eslint-config-prettier": "^2.3.0",
     "eslint-plugin-prettier": "^2.2.0",
     "husky": "^0.14.3",
+    "koa": "^2.4.1",
+    "koa-generic-session": "^2.0.0",
     "lint-staged": "^6.0.0",
     "nyc": "^11.1.0",
     "prettier": "^1.6.1",
     "remark-cli": "^4.0.0",
     "remark-preset-github": "^0.0.7",
+    "supertest": "^3.0.0",
     "xo": "^0.19.0"
   },
   "engines": {
     "node": ">=6.4.0"
   },
   "homepage": "https://github.com/ladjs/i18n",
-  "keywords": ["@ladjs/i18n", "lass"],
+  "keywords": [
+    "@ladjs/i18n",
+    "lass"
+  ],
   "license": "MIT",
   "lint-staged": {
     "*.{js,jsx,mjs,ts,tsx,css,less,scss,json,graphql}": [
       "prettier --write --single-quote --trailing-comma none",
       "git add"
     ],
-    "*.md": ["remark . -qfo", "git add"]
+    "*.md": [
+      "remark . -qfo",
+      "git add"
+    ]
   },
   "main": "lib/index.js",
-  "files": ["lib", "locales"],
+  "files": [
+    "lib",
+    "locales"
+  ],
   "remarkConfig": {
-    "plugins": ["preset-github"]
+    "plugins": [
+      "preset-github"
+    ]
   },
   "repository": {
     "type": "git",
@@ -75,7 +90,9 @@
   },
   "xo": {
     "extends": "prettier",
-    "plugins": ["prettier"],
+    "plugins": [
+      "prettier"
+    ],
     "parserOptions": {
       "sourceType": "script"
     },

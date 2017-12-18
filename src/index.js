@@ -2,12 +2,13 @@ const { extname, resolve } = require('path');
 const { stringify } = require('qs');
 const Boom = require('boom');
 const s = require('underscore.string');
+const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { getLanguage } = require('country-language');
 const moment = require('moment');
 const i18n = require('i18n');
 const locales = require('i18n-locales');
 const autoBind = require('auto-bind');
-const _ = require('lodash');
+const debug = require('debug')('ladjs:i18n');
 
 // expose global
 i18n.api = {};
@@ -45,7 +46,7 @@ class I18N {
     this.config.logErrorFn = logger.error;
 
     // validate locales against available ones
-    if (!_.every(this.config.locales, l => locales.includes(l)))
+    if (!every(this.config.locales, l => locales.includes(l)))
       throw new Error(
         `Invalid locales: ${this.config.locales
           .filter(str => !locales.includes(str))
@@ -109,10 +110,16 @@ class I18N {
 
     if (!locale) {
       locale = defaultLocale;
-      if (ctx.cookies.get(cookie) && locales.includes(ctx.cookies.get(cookie)))
+      if (
+        ctx.cookies.get(cookie) &&
+        locales.includes(ctx.cookies.get(cookie))
+      ) {
         locale = ctx.cookies.get(cookie);
-      else if (ctx.request.acceptsLanguages(locales))
+        debug('found locale via cookie using %s', locale);
+      } else if (ctx.request.acceptsLanguages(locales)) {
         locale = ctx.request.acceptsLanguages(locales);
+        debug('found locale via Accept-Language header using %s', locale);
+      }
     }
 
     // set the locale properly
@@ -122,17 +129,17 @@ class I18N {
     // if the locale was not available then redirect user
     if (locale !== ctx.state.locale)
       return ctx.redirect(
-        `/${ctx.state.locale}${ctx.pathWithoutLocale}${_.isEmpty(ctx.query)
+        `/${ctx.state.locale}${ctx.pathWithoutLocale}${isEmpty(ctx.query)
           ? ''
           : `?${stringify(ctx.query)}`}`
       );
 
     // available languages for a dropdown menu to change language
-    ctx.state.availableLanguages = _.sortBy(
+    ctx.state.availableLanguages = sortBy(
       locales.map(locale => {
         return {
           locale,
-          url: `/${locale}${ctx.pathWithoutLocale}${_.isEmpty(ctx.query)
+          url: `/${locale}${ctx.pathWithoutLocale}${isEmpty(ctx.query)
             ? ''
             : `?${stringify(ctx.query)}`}`,
           name: getLanguage(locale).name[0]
@@ -166,6 +173,7 @@ class I18N {
   }
 
   async redirect(ctx, next) {
+    debug('attempting to redirect');
     // do not redirect static paths
     if (extname(ctx.path) !== '') return next();
 
@@ -179,20 +187,26 @@ class I18N {
     if (!hasLang) {
       ctx.status = 302;
       let redirect = `/${ctx.req.locale}${ctx.url}`;
-      if (!_.isEmpty(ctx.query)) redirect += `?${stringify(ctx.query)}`;
+      if (!isEmpty(ctx.query)) redirect += `?${stringify(ctx.query)}`;
+      debug('no valid locale found in URL, redirecting to %s', redirect);
       return ctx.redirect(redirect);
     }
 
+    debug('found valid language "%s"', locale);
+
     // set the cookie for future requests
     ctx.cookies.set(this.config.cookie, locale, {
-      signed: true,
+      // Disable signed cookies in NODE_ENV=test
+      signed: process.env.NODE_ENV === 'test',
       expires: moment()
         .add(1, 'year')
         .toDate()
     });
+    debug('set cookies for locale "%s"', locale);
 
-    // if the user is logged in, then save it as `last_locale`
-    if (_.isFunction(ctx.isAuthenticated) && ctx.isAuthenticated()) {
+    // if the user is logged in and ctx.isAuthenticated() exists,
+    // then save it as `last_locale`
+    if (isFunction(ctx.isAuthenticated) && ctx.isAuthenticated()) {
       ctx.state.user.last_locale = locale;
       try {
         await ctx.state.user.save();
