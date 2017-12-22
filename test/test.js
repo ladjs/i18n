@@ -193,3 +193,37 @@ test(`saves last_locale to user's ctx`, async t => {
 
   t.is(res.status, 200);
 });
+
+test(`logs error if saves fails for user ctx`, async t => {
+  const app = new Koa();
+  const saveError = new Error('test error');
+  const logger = {
+    error: () => {}
+  };
+  const spy = sinon.spy(logger, 'error');
+  const i18n = new I18N({ phrases, directory, logger });
+
+  app.use(async (ctx, next) => {
+    ctx.state.user = {};
+    ctx.state.user.save = () => {
+      throw saveError;
+    };
+    ctx.isAuthenticated = () => true;
+    await next();
+  });
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(i18n.redirect);
+
+  app.use(ctx => {
+    const { locale } = ctx;
+    ctx.body = { locale };
+    ctx.status = 200;
+  });
+
+  const res = await request(app.listen()).get('/en/');
+
+  t.is(res.status, 200);
+  t.true(spy.calledOnce);
+  t.true(spy.alwaysCalledWithExactly(saveError));
+});
