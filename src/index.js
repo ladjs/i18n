@@ -9,6 +9,7 @@ const i18n = require('i18n');
 const locales = require('i18n-locales');
 const autoBind = require('auto-bind');
 const debug = require('debug')('ladjs:i18n');
+const boolean = require('boolean');
 
 // expose global
 i18n.api = {};
@@ -24,9 +25,9 @@ class I18N {
         cookie: 'locale',
         indent: '  ',
         defaultLocale: 'en',
-        syncFiles: true,
-        autoReload: true,
-        updateFiles: true,
+        syncFiles: boolean(process.env.I18N_SYNC_FILES),
+        autoReload: boolean(process.env.I18N_AUTO_RELOAD),
+        updateFiles: boolean(process.env.I18N_UPDATE_FILES),
         api: {
           __: 't',
           __n: 'tn',
