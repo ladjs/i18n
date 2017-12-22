@@ -197,7 +197,7 @@ class I18N {
     // set the cookie for future requests
     ctx.cookies.set(this.config.cookie, locale, {
       // Disable signed cookies in NODE_ENV=test
-      signed: process.env.NODE_ENV === 'test',
+      signed: process.env.NODE_ENV !== 'test',
       expires: moment()
         .add(1, 'year')
         .toDate()
