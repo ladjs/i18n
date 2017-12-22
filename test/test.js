@@ -2,6 +2,7 @@ const { resolve } = require('path');
 const test = require('ava');
 const request = require('supertest');
 const session = require('koa-generic-session');
+const sinon = require('sinon');
 const Koa = require('koa');
 const I18N = require('../src');
 
@@ -26,6 +27,20 @@ test('translates string', t => {
 
   t.is(i18n.translate('hello', 'en'), 'hello');
   t.is(i18n.translate('hello', 'es'), 'hola');
+});
+
+test('translates logs error for non-strings', t => {
+  const logger = {
+    warn: () => {}
+  };
+  const spy = sinon.spy(logger, 'warn');
+  const i18n = new I18N({ phrases, directory, logger });
+
+  t.is(i18n.translate({}, 'en'), undefined);
+  t.true(
+    spy.alwaysCalledWithExactly(`translation key missing: [object Object]`)
+  );
+  t.true(spy.calledOnce);
 });
 
 test('returns correct locale from path', async t => {
