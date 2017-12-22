@@ -120,6 +120,8 @@ class I18N {
       } else if (ctx.request.acceptsLanguages(locales)) {
         locale = ctx.request.acceptsLanguages(locales);
         debug('found locale via Accept-Language header using %s', locale);
+      } else {
+        debug('using default locale');
       }
     }
 
@@ -128,12 +130,14 @@ class I18N {
     ctx.locale = ctx.req.locale;
 
     // if the locale was not available then redirect user
-    if (locale !== ctx.state.locale)
+    if (locale !== ctx.state.locale) {
+      debug('locale was not available redirecting user');
       return ctx.redirect(
         `/${ctx.state.locale}${ctx.pathWithoutLocale}${isEmpty(ctx.query)
           ? ''
           : `?${stringify(ctx.query)}`}`
       );
+    }
 
     // available languages for a dropdown menu to change language
     ctx.state.availableLanguages = sortBy(
