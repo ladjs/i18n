@@ -4,10 +4,26 @@ const session = require('koa-generic-session');
 const Koa = require('koa');
 const I18N = require('../src');
 
-const phrases = { HELLO: 'Hello there!' };
+const phrases = { HELLO: 'Hello there!', hello: 'hello' };
 
 test('returns itself', t => {
   t.true(new I18N() instanceof I18N);
+});
+
+test('throws error with invalid locale', t => {
+  const error = t.throws(() => {
+    // eslint-disable-next-line no-new
+    new I18N({ phrases, locales: ['invalid'] });
+  }, Error);
+
+  t.is(error.message, 'Invalid locales: invalid');
+});
+
+test('translates string', t => {
+  const i18n = new I18N({ phrases });
+
+  t.is(i18n.translate('hello', 'en'), 'hello');
+  t.is(i18n.translate('hello', 'es'), 'hola');
 });
 
 test('returns correct locale from path', async t => {
