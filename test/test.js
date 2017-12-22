@@ -1,3 +1,4 @@
+const { resolve } = require('path');
 const test = require('ava');
 const request = require('supertest');
 const session = require('koa-generic-session');
@@ -5,6 +6,7 @@ const Koa = require('koa');
 const I18N = require('../src');
 
 const phrases = { HELLO: 'Hello there!', hello: 'hello' };
+const directory = resolve(__dirname, './fixtures');
 
 test('returns itself', t => {
   t.true(new I18N() instanceof I18N);
@@ -13,14 +15,14 @@ test('returns itself', t => {
 test('throws error with invalid locale', t => {
   const error = t.throws(() => {
     // eslint-disable-next-line no-new
-    new I18N({ phrases, locales: ['invalid'] });
+    new I18N({ phrases, locales: ['invalid'], directory });
   }, Error);
 
   t.is(error.message, 'Invalid locales: invalid');
 });
 
 test('translates string', t => {
-  const i18n = new I18N({ phrases });
+  const i18n = new I18N({ phrases, directory });
 
   t.is(i18n.translate('hello', 'en'), 'hello');
   t.is(i18n.translate('hello', 'es'), 'hola');
@@ -28,7 +30,7 @@ test('translates string', t => {
 
 test('returns correct locale from path', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases });
+  const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
@@ -47,7 +49,7 @@ test('returns correct locale from path', async t => {
 
 test('returns correct locale from cookie', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases });
+  const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
@@ -68,7 +70,7 @@ test('returns correct locale from cookie', async t => {
 
 test('returns correct locale from Accept-Language header', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases });
+  const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
@@ -89,7 +91,7 @@ test('returns correct locale from Accept-Language header', async t => {
 
 test('prefers path over cookie', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases });
+  const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
@@ -110,7 +112,7 @@ test('prefers path over cookie', async t => {
 
 test('prefers cookie over Accept-Language header', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases });
+  const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
@@ -132,7 +134,7 @@ test('prefers cookie over Accept-Language header', async t => {
 
 test('redirects to correct path based on locale set via cookie', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases });
+  const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
