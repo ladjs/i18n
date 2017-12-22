@@ -68,6 +68,24 @@ test('ctx.translates throws error for non-strings', async t => {
   t.is(res.body.message, 'Translation for your locale failed, try again');
 });
 
+test('ctx.state.l converts path to locale', async t => {
+  const app = new Koa();
+  const i18n = new I18N({ phrases, directory });
+
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(ctx => {
+    ctx.state.locale = 'es';
+    ctx.body = {
+      path: ctx.state.l('/random/path')
+    };
+  });
+
+  const res = await request(app.listen()).get('/en');
+
+  t.is(res.body.path, '/es/random/path');
+});
+
 test('returns correct locale from path', async t => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
