@@ -4,7 +4,7 @@ const request = require('supertest');
 const session = require('koa-generic-session');
 const sinon = require('sinon');
 const Koa = require('koa');
-const I18N = require('../src');
+const I18N = require('../lib');
 
 const phrases = { HELLO: 'Hello there!', hello: 'hello' };
 const directory = resolve(__dirname, './fixtures');
