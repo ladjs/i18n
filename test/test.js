@@ -153,3 +153,28 @@ test('redirects to correct path based on locale set via cookie', async t => {
   t.is(res.status, 302);
   t.is(res.headers.location, '/es/');
 });
+
+test(`saves last_locale to user's ctx`, async t => {
+  const app = new Koa();
+  const i18n = new I18N({ phrases, directory });
+
+  app.use(async (ctx, next) => {
+    ctx.state.user = {};
+    ctx.state.user.save = () => {};
+    ctx.isAuthenticated = () => true;
+    await next();
+  });
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(i18n.redirect);
+
+  app.use(ctx => {
+    const { locale } = ctx;
+    ctx.body = { locale };
+    ctx.status = 200;
+  });
+
+  const res = await request(app.listen()).get('/en/');
+
+  t.is(res.status, 200);
+});
