@@ -112,7 +112,7 @@ const i18n = new I18N({
   // `process.env.I18N_SYNC_FILES`
   syncFiles: true,
   // `process.env.I18N_AUTO_RELOAD`
-  autoReload: true,
+  autoReload: false,
   // `process.env.I18N_UPDATE_FILES`
   updateFiles: true,
   api: {
