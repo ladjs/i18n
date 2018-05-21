@@ -109,12 +109,12 @@ const i18n = new I18N({
   cookie: 'locale',
   indent: '  ',
   defaultLocale: 'en',
-  // uses truthy `process.env.I18N_SYNC_FILES`
-  syncFiles: false,
-  // uses truthy `process.env.I18N_AUTO_RELOAD`
-  autoReload: false,
-  // uses truthy `process.env.I18N_UPDATE_FILES`
-  updateFiles: false,
+  // `process.env.I18N_SYNC_FILES`
+  syncFiles: true,
+  // `process.env.I18N_AUTO_RELOAD`
+  autoReload: true,
+  // `process.env.I18N_UPDATE_FILES`
+  updateFiles: true,
   api: {
     __: 't',
     __n: 'tn',

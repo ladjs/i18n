@@ -25,9 +25,9 @@ class I18N {
         cookie: 'locale',
         indent: '  ',
         defaultLocale: 'en',
-        syncFiles: boolean(process.env.I18N_SYNC_FILES),
-        autoReload: boolean(process.env.I18N_AUTO_RELOAD),
-        updateFiles: boolean(process.env.I18N_UPDATE_FILES),
+        syncFiles: boolean(process.env.I18N_SYNC_FILES || true),
+        autoReload: boolean(process.env.I18N_AUTO_RELOAD || true),
+        updateFiles: boolean(process.env.I18N_UPDATE_FILES || true),
         api: {
           __: 't',
           __n: 'tn',
@@ -65,7 +65,9 @@ class I18N {
 
   translate(key, locale) {
     const { logger, phrases } = this.config;
+    // eslint-disable-next-line prefer-rest-params
     let args = Object.keys(arguments)
+      // eslint-disable-next-line prefer-rest-params
       .map(key => arguments[key])
       .slice(2);
     if (typeof args === 'undefined') args = [];
@@ -133,9 +135,9 @@ class I18N {
     if (locale !== ctx.state.locale) {
       debug('locale was not available redirecting user');
       return ctx.redirect(
-        `/${ctx.state.locale}${ctx.pathWithoutLocale}${isEmpty(ctx.query)
-          ? ''
-          : `?${stringify(ctx.query)}`}`
+        `/${ctx.state.locale}${ctx.pathWithoutLocale}${
+          isEmpty(ctx.query) ? '' : `?${stringify(ctx.query)}`
+        }`
       );
     }
 
@@ -144,9 +146,9 @@ class I18N {
       locales.map(locale => {
         return {
           locale,
-          url: `/${locale}${ctx.pathWithoutLocale}${isEmpty(ctx.query)
-            ? ''
-            : `?${stringify(ctx.query)}`}`,
+          url: `/${locale}${ctx.pathWithoutLocale}${
+            isEmpty(ctx.query) ? '' : `?${stringify(ctx.query)}`
+          }`,
           name: getLanguage(locale).name[0]
         };
       }),
@@ -162,16 +164,13 @@ class I18N {
     // so you can pass `ctx.translate('SOME_KEY_IN_CONFIG');` and it will lookup
     // `phrases['SOMETHING']` to get a specific and constant message
     // and then it will call `t` to translate it to the user's locale
-    ctx.translate = function() {
-      if (
-        typeof arguments[0] !== 'string' ||
-        typeof phrases[arguments[0]] !== 'string'
-      )
+    ctx.translate = function(...args) {
+      if (typeof args[0] !== 'string' || typeof phrases[args[0]] !== 'string')
         return ctx.throw(
           Boom.badRequest('Translation for your locale failed, try again')
         );
-      arguments[0] = phrases[arguments[0]];
-      return ctx.req.t(...arguments);
+      args[0] = phrases[args[0]];
+      return ctx.req.t(...args);
     };
 
     return next();
