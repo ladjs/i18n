@@ -1,9 +1,9 @@
-const { extname, resolve } = require('path');
-const { stringify } = require('qs');
+const {extname, resolve} = require('path');
+const {stringify} = require('qs');
 const Boom = require('boom');
 const s = require('underscore.string');
-const { isEmpty, sortBy, every, isFunction } = require('lodash');
-const { getLanguage } = require('country-language');
+const {isEmpty, sortBy, every, isFunction} = require('lodash');
+const {getLanguage} = require('country-language');
 const moment = require('moment');
 const i18n = require('i18n');
 const locales = require('i18n-locales');
@@ -40,7 +40,7 @@ class I18N {
       config
     );
 
-    const { logger } = this.config;
+    const {logger} = this.config;
 
     this.config.logDebugFn = logger.debug;
     this.config.logWarnFn = logger.warn;
@@ -64,7 +64,7 @@ class I18N {
   }
 
   translate(key, locale) {
-    const { logger, phrases } = this.config;
+    const {logger, phrases} = this.config;
     // eslint-disable-next-line prefer-rest-params
     let args = Object.keys(arguments)
       // eslint-disable-next-line prefer-rest-params
@@ -76,15 +76,15 @@ class I18N {
       logger.warn(`translation key missing: ${key}`);
       return;
     }
-    args = [{ phrase, locale }, ...args];
+    args = [{phrase, locale}, ...args];
     return i18n.api.t(...args);
   }
 
   middleware(ctx, next) {
-    const { locales, defaultLocale, phrases, cookie } = this.config;
+    const {locales, defaultLocale, phrases, cookie} = this.config;
 
-    // expose api methods to `ctx.req` and `ctx.state`
-    i18n.init(ctx.req, ctx.state);
+    // expose api methods to `ctx.request` and `ctx.state`
+    i18n.init(ctx.request, ctx.state);
 
     // expose a helper function to `ctx.state.l`
     // which prefixes a link/path with the locale
@@ -128,8 +128,8 @@ class I18N {
     }
 
     // set the locale properly
-    i18n.setLocale([ctx.req, ctx.state], locale);
-    ctx.locale = ctx.req.locale;
+    i18n.setLocale([ctx.request, ctx.state], locale);
+    ctx.locale = ctx.request.locale;
 
     // if the locale was not available then redirect user
     if (locale !== ctx.state.locale) {
@@ -157,7 +157,7 @@ class I18N {
 
     // get the name of the current locale's language in native language
     ctx.state.currentLanguage = s.titleize(
-      getLanguage(ctx.req.locale).nativeName[0]
+      getLanguage(ctx.request.locale).nativeName[0]
     );
 
     // bind `ctx.translate` as a helper func
@@ -170,7 +170,7 @@ class I18N {
           Boom.badRequest('Translation for your locale failed, try again')
         );
       args[0] = phrases[args[0]];
-      return ctx.req.t(...args);
+      return ctx.request.t(...args);
     };
 
     return next();
@@ -190,7 +190,7 @@ class I18N {
     // then redirect the user to their detected locale
     if (!hasLang) {
       ctx.status = 302;
-      let redirect = `/${ctx.req.locale}${ctx.url}`;
+      let redirect = `/${ctx.request.locale}${ctx.url}`;
       if (!isEmpty(ctx.query)) redirect += `?${stringify(ctx.query)}`;
       debug('no valid locale found in URL, redirecting to %s', redirect);
       return ctx.redirect(redirect);

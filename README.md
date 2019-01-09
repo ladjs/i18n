@@ -73,13 +73,13 @@ This middleware uses custom locale detection (in order of priority):
 It also exposes the following:
 
 * `ctx.pathWithoutLocale` - the `ctx.path` without the locale in it (this is used by [koa-meta][])
-* `ctx.req` - with all of `i18n` API methods (e.g. `ctx.req.t`, `ctx.req.tn`, ...)
-* `ctx.locale` - set to the value of `ctx.req.locale` (the current user's locale)
-* `ctx.state` - with all of `i18n` API methods (e.g. `ctx.req.t`, `ctx.req.tn`, ...)
+* `ctx.request` - with all of `i18n` API methods (e.g. `ctx.request.t`, `ctx.request.tn`, ...)
+* `ctx.locale` - set to the value of `ctx.request.locale` (the current user's locale)
+* `ctx.state` - with all of `i18n` API methods (e.g. `ctx.request.t`, `ctx.request.tn`, ...)
 * `ctx.state.l` - a shorthand method that accepts a path and returns a localized path (e.g. `ctx.state.l('/contact')` will output `/en/contact` if the locale is "en")
 * `ctx.state.availableLanguages` (Array) - which is useful for adding a dropdown to select from an available language
 * `ctx.state.currentLanguage` (String) - the current locale's language in native language using [country-language][]'s `getLanguage` method.
-* `ctx.translate` (Function) - a helper function for calling `i18n.api.t` to translate a given phrase (same as `i18n.translate` except it throws a `ctx.throw` error using [Boom][])
+* `ctx.translate` (Function) - a helper function for calling `i18n.api.t` to translate a given phrase by its property key name from the `phrases` object option (same as `i18n.translate` except it throws a `ctx.throw` error using [Boom][])
 
 If the given locale was not available then it will redirect the user to the detected (or default/fallback) locale.
 

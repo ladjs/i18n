@@ -1,4 +1,4 @@
-const { resolve } = require('path');
+const {resolve} = require('path');
 const test = require('ava');
 const request = require('supertest');
 const session = require('koa-generic-session');
@@ -6,7 +6,7 @@ const sinon = require('sinon');
 const Koa = require('koa');
 const I18N = require('../lib');
 
-const phrases = { HELLO: 'Hello there!', hello: 'hello' };
+const phrases = {HELLO: 'Hello there!', hello: 'hello'};
 const directory = resolve(__dirname, './fixtures');
 
 test('returns itself', t => {
@@ -16,14 +16,14 @@ test('returns itself', t => {
 test('throws error with invalid locale', t => {
   const error = t.throws(() => {
     // eslint-disable-next-line no-new
-    new I18N({ phrases, locales: ['invalid'], directory });
+    new I18N({phrases, locales: ['invalid'], directory});
   }, Error);
 
   t.is(error.message, 'Invalid locales: invalid');
 });
 
 test('translates string', t => {
-  const i18n = new I18N({ phrases, directory });
+  const i18n = new I18N({phrases, directory});
 
   t.is(i18n.translate('hello', 'en'), 'hello');
   t.is(i18n.translate('hello', 'es'), 'hola');
@@ -34,7 +34,7 @@ test('translates logs error for non-strings', t => {
     warn: () => {}
   };
   const spy = sinon.spy(logger, 'warn');
-  const i18n = new I18N({ phrases, directory, logger });
+  const i18n = new I18N({phrases, directory, logger});
 
   t.is(i18n.translate({}, 'en'), undefined);
   t.true(
@@ -45,7 +45,7 @@ test('translates logs error for non-strings', t => {
 
 test('ctx.translates throws error for non-strings', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases, directory });
+  const i18n = new I18N({phrases, directory});
 
   app.use(async (ctx, next) => {
     try {
@@ -70,7 +70,7 @@ test('ctx.translates throws error for non-strings', async t => {
 
 test('ctx.state.l converts path to locale', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases, directory });
+  const i18n = new I18N({phrases, directory});
 
   app.use(session());
   app.use(i18n.middleware);
@@ -88,14 +88,14 @@ test('ctx.state.l converts path to locale', async t => {
 
 test('returns correct locale from path', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases, directory });
+  const i18n = new I18N({phrases, directory});
 
   app.use(session());
   app.use(i18n.middleware);
 
   app.use(ctx => {
-    const { locale } = ctx;
-    ctx.body = { locale };
+    const {locale} = ctx;
+    ctx.body = {locale};
     ctx.status = 200;
   });
 
@@ -107,35 +107,34 @@ test('returns correct locale from path', async t => {
 
 test('returns correct locale from cookie', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases, directory });
+  const i18n = new I18N({phrases, directory});
 
   app.use(session());
   app.use(i18n.middleware);
 
   app.use(ctx => {
-    const { locale } = ctx;
-    ctx.body = { locale };
+    const {locale} = ctx;
+    ctx.body = {locale};
     ctx.status = 200;
   });
 
   const res = await request(app.listen())
     .get('/')
     .set('Cookie', ['locale=es']);
-
   t.is(res.status, 200);
   t.is(res.body.locale, 'es');
 });
 
 test('returns correct locale from Accept-Language header', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases, directory });
+  const i18n = new I18N({phrases, directory});
 
   app.use(session());
   app.use(i18n.middleware);
 
   app.use(ctx => {
-    const { locale } = ctx;
-    ctx.body = { locale };
+    const {locale} = ctx;
+    ctx.body = {locale};
     ctx.status = 200;
   });
 
@@ -149,14 +148,14 @@ test('returns correct locale from Accept-Language header', async t => {
 
 test('prefers path over cookie', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases, directory });
+  const i18n = new I18N({phrases, directory});
 
   app.use(session());
   app.use(i18n.middleware);
 
   app.use(ctx => {
-    const { locale } = ctx;
-    ctx.body = { locale };
+    const {locale} = ctx;
+    ctx.body = {locale};
     ctx.status = 200;
   });
 
@@ -170,14 +169,14 @@ test('prefers path over cookie', async t => {
 
 test('prefers cookie over Accept-Language header', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases, directory });
+  const i18n = new I18N({phrases, directory});
 
   app.use(session());
   app.use(i18n.middleware);
 
   app.use(ctx => {
-    const { locale } = ctx;
-    ctx.body = { locale };
+    const {locale} = ctx;
+    ctx.body = {locale};
     ctx.status = 200;
   });
 
@@ -192,15 +191,15 @@ test('prefers cookie over Accept-Language header', async t => {
 
 test('redirects to correct path based on locale set via cookie', async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases, directory });
+  const i18n = new I18N({phrases, directory});
 
   app.use(session());
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
   app.use(ctx => {
-    const { locale } = ctx;
-    ctx.body = { locale };
+    const {locale} = ctx;
+    ctx.body = {locale};
     ctx.status = 200;
   });
 
@@ -214,7 +213,7 @@ test('redirects to correct path based on locale set via cookie', async t => {
 
 test(`saves last_locale to user's ctx`, async t => {
   const app = new Koa();
-  const i18n = new I18N({ phrases, directory });
+  const i18n = new I18N({phrases, directory});
 
   app.use(async (ctx, next) => {
     ctx.state.user = {};
@@ -227,8 +226,8 @@ test(`saves last_locale to user's ctx`, async t => {
   app.use(i18n.redirect);
 
   app.use(ctx => {
-    const { locale } = ctx;
-    ctx.body = { locale };
+    const {locale} = ctx;
+    ctx.body = {locale};
     ctx.status = 200;
   });
 
@@ -244,7 +243,7 @@ test(`logs error if saves fails for user ctx`, async t => {
     error: () => {}
   };
   const spy = sinon.spy(logger, 'error');
-  const i18n = new I18N({ phrases, directory, logger });
+  const i18n = new I18N({phrases, directory, logger});
 
   app.use(async (ctx, next) => {
     ctx.state.user = {};
@@ -259,8 +258,8 @@ test(`logs error if saves fails for user ctx`, async t => {
   app.use(i18n.redirect);
 
   app.use(ctx => {
-    const { locale } = ctx;
-    ctx.body = { locale };
+    const {locale} = ctx;
+    ctx.body = {locale};
     ctx.status = 200;
   });
 
