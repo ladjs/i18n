@@ -33,14 +33,10 @@ test('translates logs error for non-strings', t => {
   const logger = {
     warn: () => {}
   };
-  const spy = sinon.spy(logger, 'warn');
   const i18n = new I18N({phrases, directory, logger});
 
-  t.is(i18n.translate({}, 'en'), undefined);
-  t.true(
-    spy.alwaysCalledWithExactly(`translation key missing: [object Object]`)
-  );
-  t.true(spy.calledOnce);
+  const error = t.throws(() => i18n.translate('UNKNOWN', 'en'));
+  t.is(error.message, 'translation key missing: UNKNOWN');
 });
 
 test('ctx.translates throws error for non-strings', async t => {
@@ -208,7 +204,7 @@ test('redirects to correct path based on locale set via cookie', async t => {
     .set('Cookie', ['locale=es']);
 
   t.is(res.status, 302);
-  t.is(res.headers.location, '/es/');
+  t.is(res.headers.location, '/es');
 });
 
 test(`saves last_locale to user's ctx`, async t => {
@@ -231,7 +227,7 @@ test(`saves last_locale to user's ctx`, async t => {
     ctx.status = 200;
   });
 
-  const res = await request(app.listen()).get('/en/');
+  const res = await request(app.listen()).get('/en');
 
   t.is(res.status, 200);
 });
@@ -263,7 +259,7 @@ test(`logs error if saves fails for user ctx`, async t => {
     ctx.status = 200;
   });
 
-  const res = await request(app.listen()).get('/en/');
+  const res = await request(app.listen()).get('/en');
 
   t.is(res.status, 200);
   t.true(spy.calledOnce);

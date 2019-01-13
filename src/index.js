@@ -64,7 +64,7 @@ class I18N {
   }
 
   translate(key, locale) {
-    const {logger, phrases} = this.config;
+    const {phrases} = this.config;
     // eslint-disable-next-line prefer-rest-params
     let args = Object.keys(arguments)
       // eslint-disable-next-line prefer-rest-params
@@ -72,10 +72,8 @@ class I18N {
       .slice(2);
     if (typeof args === 'undefined') args = [];
     const phrase = phrases[key];
-    if (typeof phrase !== 'string') {
-      logger.warn(`translation key missing: ${key}`);
-      return;
-    }
+    if (typeof phrase !== 'string')
+      throw new Error(`translation key missing: ${key}`);
     args = [{phrase, locale}, ...args];
     return i18n.api.t(...args);
   }
@@ -191,6 +189,8 @@ class I18N {
     if (!hasLang) {
       ctx.status = 302;
       let redirect = `/${ctx.request.locale}${ctx.url}`;
+      if (redirect === `/${ctx.request.locale}/`)
+        redirect = `/${ctx.request.locale}`;
       if (!isEmpty(ctx.query)) redirect += `?${stringify(ctx.query)}`;
       debug('no valid locale found in URL, redirecting to %s', redirect);
       return ctx.redirect(redirect);
