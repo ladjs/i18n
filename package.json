@@ -20,9 +20,9 @@
     "Nick Baugh <niftylettuce@gmail.com> (http://niftylettuce.com/)"
   ],
   "dependencies": {
+    "@hapi/boom": "^7.4.2",
     "auto-bind": "^2.0.0",
     "boolean": "^0.2.0",
-    "boom": "7.3.0",
     "country-language": "^0.1.7",
     "i18n": "^0.8.3",
     "i18n-locales": "^0.0.2",

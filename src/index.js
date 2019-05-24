@@ -1,6 +1,6 @@
 const {extname, resolve} = require('path');
 const {stringify} = require('qs');
-const Boom = require('boom');
+const Boom = require('@hapi/boom');
 const s = require('underscore.string');
 const {isEmpty, sortBy, every, isFunction} = require('lodash');
 const {getLanguage} = require('country-language');
