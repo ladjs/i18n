@@ -126,8 +126,6 @@ const i18n = new I18N({
 });
 ```
 
-Note that we automatically bind `logDebugFn`, `logWarnFn`, and `logErrorFn` for [i18n][] options to `logger.debug`, `logger.warn`, and `logger.error` respectively.
-
 For a list of all available locales see [i18n-locales][].
 
 
@@ -143,7 +141,7 @@ For a list of all available locales see [i18n-locales][].
 [MIT](LICENSE) © [Nick Baugh](http://niftylettuce.com/)
 
 
-## 
+##
 
 [npm]: https://www.npmjs.com/
 
