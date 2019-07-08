@@ -40,12 +40,6 @@ class I18N {
       config
     );
 
-    const {logger} = this.config;
-
-    this.config.logDebugFn = logger.debug;
-    this.config.logWarnFn = logger.warn;
-    this.config.logErrorFn = logger.error;
-
     // validate locales against available ones
     if (!every(this.config.locales, l => locales.includes(l)))
       throw new Error(
