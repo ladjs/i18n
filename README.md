@@ -126,7 +126,17 @@ const i18n = new I18N({
 });
 ```
 
-Note that we automatically bind `logDebugFn`, `logWarnFn`, and `logErrorFn` for [i18n][] options to `logger.debug`, `logger.warn`, and `logger.error` respectively.
+If you wish to bind `logDebugFn`, `logWarnFn`, and `logErrorFn` per [i18n][] options:
+
+```js
+const i18n = new I18N({
+  logDebugFn: console.log,
+  logWarnFn: console.log,
+  logErrorFn: console.log
+});
+```
+
+We recommend to use [CabinJS][cabin] for all your logging needs.
 
 For a list of all available locales see [i18n-locales][].
 
@@ -162,3 +172,5 @@ For a list of all available locales see [i18n-locales][].
 [node]: https://nodejs.org
 
 [language-support]: https://github.com/nodejs/nodejs.org/commit/d6cdd942a8fc0fffcf6879eca124295e95991bbc#diff-78c12f5adc1848d13b1c6f07055d996eR59
+
+[cabin]: https://cabinjs.com
