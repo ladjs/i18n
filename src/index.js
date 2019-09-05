@@ -1,15 +1,16 @@
-const {extname, resolve} = require('path');
-const {stringify} = require('qs');
-const Boom = require('boom');
-const s = require('underscore.string');
-const {isEmpty, sortBy, every, isFunction} = require('lodash');
-const {getLanguage} = require('country-language');
-const moment = require('moment');
+const { extname, resolve } = require('path');
+
+const Boom = require('@hapi/boom');
+const autoBind = require('auto-bind');
+const boolean = require('boolean');
+const debug = require('debug')('ladjs:i18n');
 const i18n = require('i18n');
 const locales = require('i18n-locales');
-const autoBind = require('auto-bind');
-const debug = require('debug')('ladjs:i18n');
-const boolean = require('boolean');
+const moment = require('moment');
+const titleize = require('titleize');
+const { getLanguage } = require('country-language');
+const { isEmpty, sortBy, every, isFunction } = require('lodash');
+const { stringify } = require('qs');
 
 // expose global
 i18n.api = {};
@@ -40,7 +41,7 @@ class I18N {
       config
     );
 
-    const {logger} = this.config;
+    const { logger } = this.config;
 
     this.config.logDebugFn = logger.debug;
     this.config.logWarnFn = logger.warn;
@@ -64,7 +65,7 @@ class I18N {
   }
 
   translate(key, locale) {
-    const {phrases} = this.config;
+    const { phrases } = this.config;
     // eslint-disable-next-line prefer-rest-params
     let args = Object.keys(arguments)
       // eslint-disable-next-line prefer-rest-params
@@ -74,12 +75,12 @@ class I18N {
     const phrase = phrases[key];
     if (typeof phrase !== 'string')
       throw new Error(`translation key missing: ${key}`);
-    args = [{phrase, locale}, ...args];
+    args = [{ phrase, locale }, ...args];
     return i18n.api.t(...args);
   }
 
   middleware(ctx, next) {
-    const {locales, defaultLocale, phrases, cookie} = this.config;
+    const { locales, defaultLocale, phrases, cookie } = this.config;
 
     // expose api methods to `ctx.request` and `ctx.state`
     i18n.init(ctx.request, ctx.state);
@@ -154,7 +155,7 @@ class I18N {
     );
 
     // get the name of the current locale's language in native language
-    ctx.state.currentLanguage = s.titleize(
+    ctx.state.currentLanguage = titleize(
       getLanguage(ctx.request.locale).nativeName[0]
     );
 
