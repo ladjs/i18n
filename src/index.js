@@ -36,7 +36,8 @@ class I18N {
           __h: 'th',
           __mf: 'tmf'
         },
-        register: i18n.api
+        register: i18n.api,
+        lastLocaleField: 'last_locale'
       },
       config
     );
@@ -204,9 +205,9 @@ class I18N {
     debug('set cookies for locale "%s"', locale);
 
     // if the user is logged in and ctx.isAuthenticated() exists,
-    // then save it as `last_locale`
+    // then save it as `last_locale` (variable based off lastLocaleField)
     if (isFunction(ctx.isAuthenticated) && ctx.isAuthenticated()) {
-      ctx.state.user.last_locale = locale;
+      ctx.state.user[this.config.lastLocaleField] = locale;
       try {
         await ctx.state.user.save();
       } catch (err) {

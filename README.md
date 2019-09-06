@@ -91,7 +91,7 @@ Redirects user with permanent `302` redirect to their detected locale if a valid
 
 It also sets the cookie `locale` for future requests to their detected locale.
 
-This also stores the `last_locale` for a user via `ctx.state.user.save()`.
+This also stores the `last_locale` (or whatever you configure the property name to be in the config option `lastLocaleField`) for a user via `ctx.state.user.save()`.
 
 
 ## Options
@@ -122,7 +122,8 @@ const i18n = new I18N({
     __h: 'th',
     __mf: 'tmf'
   },
-  register: i18n.api
+  register: i18n.api,
+  lastLocaleField: 'last_locale'
 });
 ```
 
