@@ -1,12 +1,12 @@
 const { extname, resolve } = require('path');
 
 const Boom = require('@hapi/boom');
-const autoBind = require('auto-bind');
 const boolean = require('boolean');
 const debug = require('debug')('ladjs:i18n');
 const i18n = require('i18n');
 const locales = require('i18n-locales');
 const moment = require('moment');
+const multimatch = require('multimatch');
 const titleize = require('titleize');
 const { getLanguage } = require('country-language');
 const { isEmpty, sortBy, every, isFunction } = require('lodash');
@@ -37,7 +37,8 @@ class I18N {
           __mf: 'tmf'
         },
         register: i18n.api,
-        lastLocaleField: 'last_locale'
+        lastLocaleField: 'last_locale',
+        ignoredRedirectGlobs: []
       },
       config
     );
@@ -56,7 +57,9 @@ class I18N {
     // configure i18n
     this.configure(this.config);
 
-    autoBind(this);
+    this.translate = this.translate.bind(this);
+    this.middleware = this.middleware.bind(this);
+    this.redirect = this.redirect.bind(this);
   }
 
   translate(key, locale) {
@@ -174,6 +177,13 @@ class I18N {
     debug('attempting to redirect');
     // do not redirect static paths
     if (extname(ctx.path) !== '') return next();
+
+    // check against ignored/whitelisted redirect middleware paths
+    const match = multimatch(ctx.path, this.config.ignoredRedirectGlobs);
+    if (Array.isArray(match) && match.length > 0) {
+      debug(`multimatch found matches for ${ctx.path}:`, match);
+      return next();
+    }
 
     // inspired by nodejs.org language support
     // <https://github.com/nodejs/nodejs.org/commit/d6cdd942a8fc0fffcf6879eca124295e95991bbc#diff-78c12f5adc1848d13b1c6f07055d996eR59>

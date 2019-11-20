@@ -89,6 +89,8 @@ If the given locale was not available then it will redirect the user to the dete
 
 Redirects user with permanent `302` redirect to their detected locale if a valid language was not found for them.
 
+**NOTE:** As of v1.2.2 we have added a `ignoredRedirectGlobs` option you can pass to `new I18N({ ... })` which will ignore these paths for locale redirection.  This is incredibly useful if you are using authentication providers and the `passport` library, e.g. you want to set `/auth/github/ok` as the callback URL for GitHub, but a redirect to `/en/auth/github/ok` would have occurred, thus causing authentication to fail due to a bad code.  In this case, you would set `{ ignoredRedirectGlobs: [ '/auth/**/*' ] }` or simply `[ '/auth/google/ok' ]`.  This package uses [multimatch][] internally which supports an Array, therefore you could negate certain paths if needed.  See the documentation for [multimatch][] for more insight.
+
 It also sets the cookie `locale` for future requests to their detected locale.
 
 This also stores the `last_locale` (or whatever you configure the property name to be in the config option `lastLocaleField`) for a user via `ctx.state.user.save()`.
@@ -123,7 +125,8 @@ const i18n = new I18N({
     __mf: 'tmf'
   },
   register: i18n.api,
-  lastLocaleField: 'last_locale'
+  lastLocaleField: 'last_locale',
+  ignoredRedirectGlobs: []
 });
 ```
 
@@ -175,3 +178,5 @@ For a list of all available locales see [i18n-locales][].
 [language-support]: https://github.com/nodejs/nodejs.org/commit/d6cdd942a8fc0fffcf6879eca124295e95991bbc#diff-78c12f5adc1848d13b1c6f07055d996eR59
 
 [cabin]: https://cabinjs.com
+
+[multimatch]: https://github.com/sindresorhus/multimatch

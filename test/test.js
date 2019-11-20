@@ -1,9 +1,11 @@
 const { resolve } = require('path');
+
 const test = require('ava');
 const request = require('supertest');
 const session = require('koa-generic-session');
 const sinon = require('sinon');
 const Koa = require('koa');
+
 const I18N = require('../lib');
 
 const phrases = { HELLO: 'Hello there!', hello: 'hello' };
@@ -183,6 +185,41 @@ test('prefers cookie over Accept-Language header', async t => {
 
   t.is(res.status, 200);
   t.is(res.body.locale, 'es');
+});
+
+test('does not redirect with ignored redirect globs', async t => {
+  const app = new Koa();
+  const i18n = new I18N({
+    phrases,
+    directory,
+    ignoredRedirectGlobs: ['/auth/**/*', '/login']
+  });
+
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(i18n.redirect);
+
+  app.use(ctx => {
+    const { locale } = ctx;
+    ctx.body = { locale };
+    ctx.status = 200;
+  });
+
+  let res = await request(app.listen())
+    .get('/login')
+    .set('Cookie', ['locale=es']);
+  t.is(res.status, 200);
+
+  res = await request(app.listen())
+    .get('/auth/google/ok')
+    .set('Cookie', ['locale=es']);
+  t.is(res.status, 200);
+
+  res = await request(app.listen())
+    .get('/login/beep/baz')
+    .set('Cookie', ['locale=es']);
+  t.is(res.status, 302);
+  t.is(res.headers.location, '/es/login/beep/baz');
 });
 
 test('redirects to correct path based on locale set via cookie', async t => {
