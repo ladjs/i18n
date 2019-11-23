@@ -27,7 +27,7 @@ class I18N {
         indent: '  ',
         defaultLocale: 'en',
         syncFiles: boolean(process.env.I18N_SYNC_FILES || true),
-        autoReload: boolean(process.env.I18N_AUTO_RELOAD || false),
+        autoReload: boolean(process.env.I18N_AUTO_RELOAD || true),
         updateFiles: boolean(process.env.I18N_UPDATE_FILES || true),
         api: {
           __: 't',
