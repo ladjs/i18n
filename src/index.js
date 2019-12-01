@@ -38,7 +38,13 @@ class I18N {
         },
         register: i18n.api,
         lastLocaleField: 'last_locale',
-        ignoredRedirectGlobs: []
+        ignoredRedirectGlobs: [],
+        redirectIgnoresNonGetMethods: true,
+        stringify: {
+          addQueryPrefix: true,
+          format: 'RFC1738',
+          arrayFormat: 'indices'
+        }
       },
       config
     );
@@ -133,7 +139,9 @@ class I18N {
       debug('locale was not available redirecting user');
       return ctx.redirect(
         `/${ctx.state.locale}${ctx.pathWithoutLocale}${
-          isEmpty(ctx.query) ? '' : `?${stringify(ctx.query)}`
+          isEmpty(ctx.query)
+            ? ''
+            : `?${stringify(ctx.query, this.config.stringify)}`
         }`
       );
     }
@@ -144,7 +152,9 @@ class I18N {
         return {
           locale,
           url: `/${locale}${ctx.pathWithoutLocale}${
-            isEmpty(ctx.query) ? '' : `?${stringify(ctx.query)}`
+            isEmpty(ctx.query)
+              ? ''
+              : `?${stringify(ctx.query, this.config.stringify)}`
           }`,
           name: getLanguage(locale).name[0]
         };
@@ -178,6 +188,10 @@ class I18N {
     // do not redirect static paths
     if (extname(ctx.path) !== '') return next();
 
+    // if the method is not a GET request then ignore it
+    if (this.config.redirectIgnoresNonGetMethods && ctx.method !== 'GET')
+      return next();
+
     // check against ignored/whitelisted redirect middleware paths
     const match = multimatch(ctx.path, this.config.ignoredRedirectGlobs);
     if (Array.isArray(match) && match.length > 0) {
@@ -194,10 +208,11 @@ class I18N {
     // then redirect the user to their detected locale
     if (!hasLang) {
       ctx.status = 302;
-      let redirect = `/${ctx.request.locale}${ctx.url}`;
+      let redirect = `/${ctx.request.locale}${ctx.path}`;
       if (redirect === `/${ctx.request.locale}/`)
         redirect = `/${ctx.request.locale}`;
-      if (!isEmpty(ctx.query)) redirect += `?${stringify(ctx.query)}`;
+      if (!isEmpty(ctx.query))
+        redirect += `${stringify(ctx.query, this.config.stringify)}`;
       debug('no valid locale found in URL, redirecting to %s', redirect);
       return ctx.redirect(redirect);
     }

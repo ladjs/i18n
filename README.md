@@ -95,6 +95,8 @@ It also sets the cookie `locale` for future requests to their detected locale.
 
 This also stores the `last_locale` (or whatever you configure the property name to be in the config option `lastLocaleField`) for a user via `ctx.state.user.save()`.
 
+**NOTE:** As of v2.0.0 we have added a `redirectIgnoresNonGetMethods` (Boolean) option (defaults to `true`) which you can pass to `new I18N({ ... })` which will ignore non-GET methods on redirection.
+
 
 ## Options
 
@@ -126,7 +128,14 @@ const i18n = new I18N({
   },
   register: i18n.api,
   lastLocaleField: 'last_locale',
-  ignoredRedirectGlobs: []
+  ignoredRedirectGlobs: [],
+  redirectIgnoresNonGetMethods: true,
+  // <https://github.com/ljharb/qs>
+  stringify: {
+    addQueryPrefix: true,
+    format: 'RFC1738',
+    arrayFormat: 'indices'
+  }
 });
 ```
 

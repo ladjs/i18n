@@ -222,6 +222,77 @@ test('does not redirect with ignored redirect globs', async t => {
   t.is(res.headers.location, '/es/login/beep/baz');
 });
 
+// https://github.com/ladjs/lad/issues/372
+test('does not duplicate querystring if no locale provided', async t => {
+  // https://lad.sh?test=test?test=test?test=test%3Ftest%3Dtest
+  const app = new Koa();
+  const i18n = new I18N({ phrases, directory });
+
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(i18n.redirect);
+
+  app.use(ctx => {
+    const { locale } = ctx;
+    ctx.body = { locale };
+    ctx.status = 200;
+  });
+
+  const res = await request(app.listen()).get(
+    '/?test=test?test=test?test=test'
+  );
+
+  t.is(res.status, 302);
+  t.is(res.headers.location, '/en?test=test%3Ftest%3Dtest%3Ftest%3Dtest');
+});
+
+test('redirectIgnoresNonGetMethods', async t => {
+  const app = new Koa();
+  const i18n = new I18N({ phrases, directory });
+
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(i18n.redirect);
+
+  app.use(ctx => {
+    const { locale } = ctx;
+    ctx.body = { locale };
+    ctx.status = 200;
+  });
+
+  let res = await request(app.listen()).get('/');
+  t.is(res.status, 302);
+  t.is(res.headers.location, '/en');
+
+  res = await request(app.listen()).post('/');
+  t.is(res.status, 200);
+});
+
+test('ignoredRedirectGlobs', async t => {
+  const app = new Koa();
+  const i18n = new I18N({
+    ignoredRedirectGlobs: ['/foo', '/baz/**/*'],
+    phrases,
+    directory
+  });
+
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(i18n.redirect);
+
+  app.use(ctx => {
+    const { locale } = ctx;
+    ctx.body = { locale };
+    ctx.status = 200;
+  });
+
+  let res = await request(app.listen()).get('/foo');
+  t.is(res.status, 200);
+
+  res = await request(app.listen()).get('/baz/beep/bar');
+  t.is(res.status, 200);
+});
+
 test('redirects to correct path based on locale set via cookie', async t => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
