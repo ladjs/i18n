@@ -1,13 +1,13 @@
 const { extname, resolve } = require('path');
 
 const Boom = require('@hapi/boom');
-const boolean = require('boolean');
 const debug = require('debug')('ladjs:i18n');
 const i18n = require('i18n');
 const locales = require('i18n-locales');
 const moment = require('moment');
 const multimatch = require('multimatch');
 const titleize = require('titleize');
+const { boolean } = require('boolean');
 const { getLanguage } = require('country-language');
 const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { stringify } = require('qs');
@@ -110,7 +110,7 @@ class I18N {
     });
 
     ctx.pathWithoutLocale = locale
-      ? ctx.path.substring(`/${locale}`.length)
+      ? ctx.path.slice(`/${locale}`.length)
       : ctx.path;
     if (ctx.pathWithoutLocale === '') ctx.pathWithoutLocale = '/';
 

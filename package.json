@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "@hapi/boom": "^8.0.1",
-    "boolean": "1.0.0",
+    "boolean": "3.0.0",
     "country-language": "^0.1.7",
     "debug": "^4.1.1",
     "i18n": "^0.8.4",
@@ -33,28 +33,28 @@
     "titleize": "^2.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.0",
-    "@babel/core": "^7.7.2",
-    "@babel/preset-env": "^7.7.1",
+    "@babel/cli": "^7.7.4",
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
     "ava": "^2.4.0",
     "codecov": "^3.6.1",
     "cross-env": "^6.0.3",
-    "eslint": "^6.6.0",
+    "eslint": "^6.7.2",
     "eslint-config-xo-lass": "^1.0.3",
     "eslint-plugin-node": "^10.0.0",
     "fixpack": "^2.3.1",
     "husky": "^3.1.0",
     "koa": "^2.11.0",
     "koa-generic-session": "^2.0.1",
-    "lint-staged": "^9.4.3",
+    "lint-staged": "^9.5.0",
     "nyc": "^14.1.1",
     "remark-cli": "^7.0.1",
     "remark-preset-github": "^0.0.16",
     "sinon": "^7.5.0",
     "supertest": "^4.0.2",
-    "xo": "0.24"
+    "xo": "^0.25.3"
   },
   "engines": {
     "node": ">=6.4.0"
