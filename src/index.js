@@ -57,6 +57,12 @@ class I18N {
           .join(', ')}`
       );
 
+    // default locale must be in locales
+    if (!this.config.locales.includes(this.config.defaultLocale))
+      throw new Error(
+        `Default locale of ${this.config.defaultLocale} must be included in list of locales`
+      );
+
     // inherit i18n object
     Object.assign(this, i18n);
 
@@ -116,17 +122,24 @@ class I18N {
 
     if (!locale) {
       locale = defaultLocale;
+      // if "Accepts: */*" or "Accept-Language: */*"
+      // then the accepted locale will be the first in
+      // the list of provided locales, and as such we must
+      // preserve the defaultLocale as the preferred language
+      const acceptedLocale = ctx.request.acceptsLanguages([
+        ...new Set([defaultLocale, ...locales])
+      ]);
       if (
         ctx.cookies.get(cookie) &&
         locales.includes(ctx.cookies.get(cookie))
       ) {
         locale = ctx.cookies.get(cookie);
         debug('found locale via cookie using %s', locale);
-      } else if (ctx.request.acceptsLanguages(locales)) {
-        locale = ctx.request.acceptsLanguages(locales);
+      } else if (acceptedLocale) {
+        locale = acceptedLocale;
         debug('found locale via Accept-Language header using %s', locale);
       } else {
-        debug('using default locale');
+        debug('using default locale', locale);
       }
     }
 
