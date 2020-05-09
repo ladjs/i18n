@@ -70,23 +70,25 @@ class I18N {
     this.configure(this.config);
 
     this.translate = this.translate.bind(this);
+    this.translateError = this.translateError.bind(this);
     this.middleware = this.middleware.bind(this);
     this.redirect = this.redirect.bind(this);
   }
 
-  translate(key, locale) {
+  translate(key, locale, ...args) {
+    locale = locale || this.config.defaultLocale;
     const { phrases } = this.config;
-    // eslint-disable-next-line prefer-rest-params
-    let args = Object.keys(arguments)
-      // eslint-disable-next-line prefer-rest-params
-      .map(key => arguments[key])
-      .slice(2);
-    if (typeof args === 'undefined') args = [];
     const phrase = phrases[key];
     if (typeof phrase !== 'string')
       throw new Error(`translation key missing: ${key}`);
-    args = [{ phrase, locale }, ...args];
-    return i18n.api.t(...args);
+    return i18n.api.t({ phrase, locale }, ...args);
+  }
+
+  translateError(key, locale, ...args) {
+    const str = this.translate(key, locale, ...args);
+    const err = new Error(str);
+    err.no_translate = true;
+    return err;
   }
 
   middleware(ctx, next) {

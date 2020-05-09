@@ -15,7 +15,8 @@
 * [Install](#install)
 * [Usage](#usage)
 * [API](#api)
-  * [i18n.translate(key, locale)](#i18ntranslatekey-locale)
+  * [i18n.translate(key, locale, ...args)](#i18ntranslatekey-locale-args)
+  * [i18n.translateError(key, locale, ...args)](#i18ntranslateerrorkey-locale-args)
   * [i18n.middleware(ctx, next)](#i18nmiddlewarectx-next)
   * [i18n.redirect(ctx, next)](#i18nredirectctx-next)
 * [Options](#options)
@@ -58,9 +59,15 @@ app.listen();
 
 ## API
 
-### i18n.translate(key, locale)
+### i18n.translate(key, locale, ...args)
 
-Returns translation for phrase `key` with the given `locale`.
+Returns translation for phrase `key` with the given `locale`.  Optionally pass additional arguments, e.g. format specifier replacements for use in the phrase.  For example if you have a phrase of "An error occurred %s" with a key of "ERROR_OCCURRED", and you use it as such `i18n.translate('ERROR_OCCURRED', 'en', 'some error message')` then it would return `'An error occurred some error message`.
+
+### i18n.translateError(key, locale, ...args)
+
+Returns the same string as `i18n.translate`, but wrapped with a new `Error` object with a property `no_translate` and a value set to `true`.
+
+This is an extremely useful method if you are using `koa-better-error-handler` package in the [Lad][] framework – as it will prevent a double translation from occurring.
 
 ### i18n.middleware(ctx, next)
 
@@ -189,3 +196,5 @@ For a list of all available locales see [i18n-locales][].
 [cabin]: https://cabinjs.com
 
 [multimatch]: https://github.com/sindresorhus/multimatch
+
+[lad]: https://github.com/ladjs/lad

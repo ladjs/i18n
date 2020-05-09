@@ -374,3 +374,11 @@ test(`logs error if saves fails for user ctx`, async t => {
   t.true(spy.calledOnce);
   t.true(spy.alwaysCalledWithExactly(saveError));
 });
+
+test('returns an error object with no_translate=true', t => {
+  const i18n = new I18N({ phrases, directory });
+  t.is(i18n.translate('hello', 'en'), 'hello');
+  const err = i18n.translateError('hello', 'es');
+  t.true(err.no_translate);
+  t.is(err.message, 'hola');
+});
