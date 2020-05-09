@@ -65,7 +65,7 @@ Returns translation for phrase `key` with the given `locale`.  Optionally pass a
 
 ### i18n.translateError(key, locale, ...args)
 
-Returns the same string as `i18n.translate`, but wrapped with a new `Error` object with a property `no_translate` and a value set to `true`.
+Returns the same string as `i18n.translate`, but wrapped with a new `Error` object with a property `no_translate` set to `true`.
 
 This is an extremely useful method if you are using `koa-better-error-handler` package in the [Lad][] framework – as it will prevent a double translation from occurring.
 
@@ -85,8 +85,9 @@ It also exposes the following:
 * `ctx.state` - with all of `i18n` API methods (e.g. `ctx.request.t`, `ctx.request.tn`, ...)
 * `ctx.state.l` - a shorthand method that accepts a path and returns a localized path (e.g. `ctx.state.l('/contact')` will output `/en/contact` if the locale is "en")
 * `ctx.state.availableLanguages` (Array) - which is useful for adding a dropdown to select from an available language
-* `ctx.state.currentLanguage` (String) - the current locale's language in native language using [country-language][]'s `getLanguage` method.
+* `ctx.state.currentLanguage` (String) - the current locale's language in native language using [country-language][]'s `getLanguage` method
 * `ctx.translate` (Function) - a helper function for calling `i18n.api.t` to translate a given phrase by its property key name from the `phrases` object option (same as `i18n.translate` except it throws a `ctx.throw` error using [Boom][])
+* `ctx.translateError` (Function) - same as `ctx.translate` except it returns an Error object with a property `no_translate` set to `true` (similar to `i18n.translateError`)
 
 If the given locale was not available then it will redirect the user to the detected (or default/fallback) locale.
 

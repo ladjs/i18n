@@ -382,3 +382,30 @@ test('returns an error object with no_translate=true', t => {
   t.true(err.no_translate);
   t.is(err.message, 'hola');
 });
+
+test('ctx.translates throws error with no_translate', async t => {
+  const app = new Koa();
+  const i18n = new I18N({ phrases, directory });
+
+  app.use(async (ctx, next) => {
+    try {
+      await next();
+    } catch (err) {
+      ctx.status = err.statusCode || err.status || 500;
+      ctx.body = {
+        message: err.message
+      };
+    }
+  });
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(ctx => {
+    const err = ctx.translateError('HELLO');
+    t.true(err.no_translate);
+    ctx.throw(err);
+  });
+
+  const res = await request(app.listen()).get('/en');
+  t.is(res.status, 500);
+  t.is(res.body.message, 'Hello there!');
+});

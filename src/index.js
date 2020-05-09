@@ -195,6 +195,13 @@ class I18N {
       return ctx.request.t(...args);
     };
 
+    ctx.translateError = function(...args) {
+      const str = ctx.translate(...args);
+      const err = new Error(str);
+      err.no_translate = true;
+      return err;
+    };
+
     return next();
   }
 
