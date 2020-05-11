@@ -66,6 +66,14 @@ class I18N {
     // inherit i18n object
     Object.assign(this, i18n);
 
+    // expose shorthand API methods
+    this.api = {};
+    Object.keys(this.config.api).forEach(key => {
+      this[this.config.api[key]] = this[key];
+      this.api[key] = this[key];
+      this.api[this.config.api[key]] = this[key];
+    });
+
     // configure i18n
     this.configure(this.config);
 

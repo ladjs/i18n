@@ -86,7 +86,7 @@ It also exposes the following:
 * `ctx.state.l` - a shorthand method that accepts a path and returns a localized path (e.g. `ctx.state.l('/contact')` will output `/en/contact` if the locale is "en")
 * `ctx.state.availableLanguages` (Array) - which is useful for adding a dropdown to select from an available language
 * `ctx.state.currentLanguage` (String) - the current locale's language in native language using [country-language][]'s `getLanguage` method
-* `ctx.translate` (Function) - a helper function for calling `i18n.api.t` to translate a given phrase by its property key name from the `phrases` object option (same as `i18n.translate` except it throws a `ctx.throw` error using [Boom][])
+* `ctx.translate` (Function) - a helper function for calling `i18n.api.t` or `i18n.t` to translate a given phrase by its property key name from the `phrases` object option (same as `i18n.translate` except it throws a `ctx.throw` error using [Boom][])
 * `ctx.translateError` (Function) - same as `ctx.translate` except it returns an Error object with a property `no_translate` set to `true` (similar to `i18n.translateError`)
 
 If the given locale was not available then it will redirect the user to the detected (or default/fallback) locale.
