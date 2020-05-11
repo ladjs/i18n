@@ -109,6 +109,7 @@ class I18N {
     // 1. check the URL, if === `/de` or starts with `/de/` then locale is `de`
     // 2. check the cookie
     // 3. check Accept-Language last
+    // 4. check the user's lastLocale
     //
     // also we need to expose `ctx.pathWithoutLocale`
     // as the path without locale
@@ -140,8 +141,17 @@ class I18N {
       } else if (acceptedLocale) {
         locale = acceptedLocale;
         debug('found locale via Accept-Language header using %s', locale);
+      } else if (
+        this.config.lastLocaleField &&
+        isFunction(ctx.isAuthenticated) &&
+        ctx.isAuthenticated() &&
+        ctx.state.user[this.config.lastLocaleField]
+      ) {
+        // this supports API requests using the last locale of the user
+        locale = ctx.state.user[this.config.lastLocaleField];
+        debug("using logged in user's last locale %s", locale);
       } else {
-        debug('using default locale', locale);
+        debug('using default locale %s', locale);
       }
     }
 
@@ -253,7 +263,12 @@ class I18N {
 
     // if the user is logged in and ctx.isAuthenticated() exists,
     // then save it as `last_locale` (variable based off lastLocaleField)
-    if (isFunction(ctx.isAuthenticated) && ctx.isAuthenticated()) {
+    if (
+      this.config.lastLocaleField &&
+      isFunction(ctx.isAuthenticated) &&
+      ctx.isAuthenticated() &&
+      ctx.state.user[this.config.lastLocaleField] !== locale
+    ) {
       ctx.state.user[this.config.lastLocaleField] = locale;
       try {
         await ctx.state.user.save();
