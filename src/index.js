@@ -166,6 +166,7 @@ class I18N {
     // set the locale properly
     i18n.setLocale([ctx.request, ctx.state], locale);
     ctx.locale = ctx.request.locale;
+    ctx.set('Content-Language', ctx.locale);
 
     // if the locale was not available then redirect user
     if (locale !== ctx.state.locale) {
