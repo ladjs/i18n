@@ -24,6 +24,13 @@ class I18N {
         directory: resolve('locales'),
         locales: ['en', 'es', 'zh'],
         cookie: 'locale',
+        cookieOptions: {
+          // Disable signed cookies in NODE_ENV=test
+          signed: process.env.NODE_ENV !== 'test',
+          expires: moment()
+            .add(1, 'year')
+            .toDate()
+        },
         indent: '  ',
         defaultLocale: 'en',
         syncFiles: boolean(process.env.I18N_SYNC_FILES || true),
@@ -261,13 +268,7 @@ class I18N {
     debug('found valid language "%s"', locale);
 
     // set the cookie for future requests
-    ctx.cookies.set(this.config.cookie, locale, {
-      // Disable signed cookies in NODE_ENV=test
-      signed: process.env.NODE_ENV !== 'test',
-      expires: moment()
-        .add(1, 'year')
-        .toDate()
-    });
+    ctx.cookies.set(this.config.cookie, locale, this.config.cookieOptions);
     debug('set cookies for locale "%s"', locale);
 
     // if the user is logged in and ctx.isAuthenticated() exists,
