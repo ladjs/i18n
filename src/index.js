@@ -12,9 +12,6 @@ const { getLanguage } = require('country-language');
 const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { stringify } = require('qs');
 
-// expose global
-i18n.api = {};
-
 class I18N {
   constructor(config = {}) {
     this.config = Object.assign(
@@ -43,7 +40,6 @@ class I18N {
           __h: 'th',
           __mf: 'tmf'
         },
-        register: i18n.api,
         lastLocaleField: 'last_locale',
         ignoredRedirectGlobs: [],
         redirectIgnoresNonGetMethods: true,
@@ -96,7 +92,7 @@ class I18N {
     const phrase = phrases[key];
     if (typeof phrase !== 'string')
       throw new Error(`translation key missing: ${key}`);
-    return i18n.api.t({ phrase, locale }, ...args);
+    return this.api.t({ phrase, locale }, ...args);
   }
 
   translateError(key, locale, ...args) {
@@ -110,7 +106,7 @@ class I18N {
     const { locales, defaultLocale, phrases, cookie } = this.config;
 
     // expose api methods to `ctx.request` and `ctx.state`
-    i18n.init(ctx.request, ctx.state);
+    this.init(ctx.request, ctx.state);
 
     // expose a helper function to `ctx.state.l`
     // which prefixes a link/path with the locale
@@ -171,7 +167,7 @@ class I18N {
     }
 
     // set the locale properly
-    i18n.setLocale([ctx.request, ctx.state], locale);
+    this.setLocale([ctx.request, ctx.state], locale);
     ctx.locale = ctx.request.locale;
     ctx.set('Content-Language', ctx.locale);
 
