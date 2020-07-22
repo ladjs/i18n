@@ -583,11 +583,17 @@ test('allows redirect of typical domain extensions', async t => {
     ctx.status = 200;
   });
 
-  const res = await request(app.listen())
+  let res = await request(app.listen())
     .get('/login.com')
     .set('Cookie', ['locale=es']);
   t.is(res.status, 302);
   t.is(res.header.location, '/es/login.com');
+
+  res = await request(app.listen())
+    .get('/login.com.mx')
+    .set('Cookie', ['locale=es']);
+  t.is(res.status, 302);
+  t.is(res.header.location, '/es/login.com.mx');
 });
 
 test('redirects sets users last_locale', async t => {
