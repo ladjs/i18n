@@ -11,6 +11,7 @@ const { boolean } = require('boolean');
 const { getLanguage } = require('country-language');
 const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { stringify } = require('qs');
+const tlds = require('tlds');
 
 class I18N {
   constructor(config = {}) {
@@ -47,7 +48,8 @@ class I18N {
           addQueryPrefix: true,
           format: 'RFC1738',
           arrayFormat: 'indices'
-        }
+        },
+        redirectTLDS: true
       },
       config
     );
@@ -230,7 +232,14 @@ class I18N {
   async redirect(ctx, next) {
     debug('attempting to redirect');
     // do not redirect static paths
-    if (extname(ctx.path) !== '') return next();
+    if (extname(ctx.path) !== '') {
+      if (!this.config.redirectTLDS) return next();
+
+      const domainExtensions = multimatch(extname(ctx.path).slice(1), tlds);
+
+      if (!Array.isArray(domainExtensions) || domainExtensions.length === 0)
+        return next();
+    }
 
     // if the method is not a GET request then ignore it
     if (this.config.redirectIgnoresNonGetMethods && ctx.method !== 'GET')
