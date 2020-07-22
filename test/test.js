@@ -1,10 +1,12 @@
 const { resolve } = require('path');
 
-const test = require('ava');
+const Koa = require('koa');
 const request = require('supertest');
 const session = require('koa-generic-session');
 const sinon = require('sinon');
-const Koa = require('koa');
+const test = require('ava');
+const tlds = require('tlds');
+const { toASCII } = require('punycode/');
 
 const I18N = require('../lib');
 
@@ -569,32 +571,35 @@ test('does not redirect typical domain extension when disabled', async t => {
   t.is(res.status, 200);
 });
 
-test('allows redirect of typical domain extensions', async t => {
-  const app = new Koa();
-  const i18n = new I18N({ phrases, directory });
+for (const tld of tlds) {
+  test(`allows redirect of ${tld} domain extension`, async t => {
+    const app = new Koa();
+    const i18n = new I18N({ phrases, directory });
 
-  app.use(session());
-  app.use(i18n.middleware);
-  app.use(i18n.redirect);
+    app.use(session());
+    app.use(i18n.middleware);
+    app.use(i18n.redirect);
 
-  app.use(ctx => {
-    const { locale } = ctx;
-    ctx.body = { locale };
-    ctx.status = 200;
+    app.use(ctx => {
+      const { locale } = ctx;
+      ctx.body = { locale };
+      ctx.status = 200;
+    });
+
+    const route = `/login.${toASCII(tld)}`;
+    let res = await request(app.listen())
+      .get(route)
+      .set('Cookie', ['locale=es']);
+    t.is(res.status, 302);
+    t.is(res.header.location, `/es/login.${toASCII(tld)}`);
+
+    res = await request(app.listen())
+      .get(route)
+      .set('Cookie', ['locale=es']);
+    t.is(res.status, 302);
+    t.is(res.header.location, `/es/login.${toASCII(tld)}`);
   });
-
-  let res = await request(app.listen())
-    .get('/login.com')
-    .set('Cookie', ['locale=es']);
-  t.is(res.status, 302);
-  t.is(res.header.location, '/es/login.com');
-
-  res = await request(app.listen())
-    .get('/login.com.mx')
-    .set('Cookie', ['locale=es']);
-  t.is(res.status, 302);
-  t.is(res.header.location, '/es/login.com.mx');
-});
+}
 
 test('redirects sets users last_locale', async t => {
   const app = new Koa();

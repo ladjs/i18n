@@ -1,4 +1,4 @@
-const { extname, resolve } = require('path');
+const { basename, extname, resolve } = require('path');
 
 const Boom = require('@hapi/boom');
 const debug = require('debug')('ladjs:i18n');
@@ -7,11 +7,14 @@ const locales = require('i18n-locales');
 const moment = require('moment');
 const multimatch = require('multimatch');
 const titleize = require('titleize');
+const tlds = require('tlds');
 const { boolean } = require('boolean');
 const { getLanguage } = require('country-language');
 const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { stringify } = require('qs');
-const tlds = require('tlds');
+const { toASCII } = require('punycode/');
+
+const punycodedTlds = tlds.map(tld => toASCII(tld));
 
 class I18N {
   constructor(config = {}) {
@@ -234,10 +237,8 @@ class I18N {
     // do not redirect static paths
     if (extname(ctx.path) !== '') {
       if (!this.config.redirectTLDS) return next();
-
-      const domainExtensions = multimatch(extname(ctx.path).slice(1), tlds);
-
-      if (!Array.isArray(domainExtensions) || domainExtensions.length === 0)
+      const asciiFile = toASCII(basename(ctx.path));
+      if (!punycodedTlds.some(tld => asciiFile.endsWith(`.${tld}`)))
         return next();
     }
 
