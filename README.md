@@ -13,7 +13,6 @@
 ## Table of Contents
 
 * [Install](#install)
-* [Important Note](#important-note)
 * [Usage](#usage)
 * [API](#api)
   * [i18n.translate(key, locale, ...args)](#i18ntranslatekey-locale-args)
@@ -21,6 +20,7 @@
   * [i18n.middleware(ctx, next)](#i18nmiddlewarectx-next)
   * [i18n.redirect(ctx, next)](#i18nredirectctx-next)
 * [Options](#options)
+* [Redirect exceptions](#redirect-exceptions)
 * [Contributors](#contributors)
 * [License](#license)
 
@@ -38,15 +38,6 @@ npm install @ladjs/i18n
 ```sh
 yarn add @ladjs/i18n
 ```
-
-
-## Important Note
-
-If you have an extension in your route, e.g. `foo.css` or `foo.com`, then the i18n middleware we expose (see below) will not effect this.
-
-We have considered accepting a pull request to handle detection of file extension (e.g. if it is a domain name) or another way to allow certain routes to bypass this.
-
-Thank you, and let us know if you have any issues!
 
 
 ## Usage
@@ -153,7 +144,8 @@ const i18n = new I18N({
     addQueryPrefix: true,
     format: 'RFC1738',
     arrayFormat: 'indices'
-  }
+  },
+  redirectTLDS: true
 });
 ```
 
@@ -170,6 +162,15 @@ const i18n = new I18N({
 We recommend to use [CabinJS][cabin] for all your logging needs.
 
 For a list of all available locales see [i18n-locales][].
+
+
+## Redirect exceptions
+
+If the path has an extension, then it is not redirected.
+
+However if `redirectTLDS` option is `true` (which is `true` by default as of v4.0.0), then if the path basename ends with a valid TLD, then it is redirected.
+
+We came across this missing feature and added it after our discovery through [Forward Email](https://forwardemail.net).
 
 
 ## Contributors
