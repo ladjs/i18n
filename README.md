@@ -174,9 +174,10 @@ For a list of all available locales see [i18n-locales][].
 
 ## Contributors
 
-| Name           | Website                    |
-| -------------- | -------------------------- |
-| **Nick Baugh** | <http://niftylettuce.com/> |
+| Name             | Website                           |
+| ---------------- | --------------------------------- |
+| **Nick Baugh**   | <http://niftylettuce.com/>        |
+| **shadowgate15** | <https://github.com/shadowgate15> |
 
 
 ## License
