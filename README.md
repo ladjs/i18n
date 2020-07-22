@@ -13,6 +13,7 @@
 ## Table of Contents
 
 * [Install](#install)
+* [Important Note](#important-note)
 * [Usage](#usage)
 * [API](#api)
   * [i18n.translate(key, locale, ...args)](#i18ntranslatekey-locale-args)
@@ -37,6 +38,15 @@ npm install @ladjs/i18n
 ```sh
 yarn add @ladjs/i18n
 ```
+
+
+## Important Note
+
+If you have an extension in your route, e.g. `foo.css` or `foo.com`, then the i18n middleware we expose (see below) will not effect this.
+
+We have considered accepting a pull request to handle detection of file extension (e.g. if it is a domain name) or another way to allow certain routes to bypass this.
+
+Thank you, and let us know if you have any issues!
 
 
 ## Usage
