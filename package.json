@@ -31,7 +31,8 @@
     "moment": "^2.25.3",
     "multimatch": "^4.0.0",
     "qs": "^6.9.4",
-    "titleize": "^2.1.0"
+    "titleize": "^2.1.0",
+    "tlds": "^1.207.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

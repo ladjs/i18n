@@ -529,7 +529,7 @@ test('translate default locale', t => {
   t.is(i18n.translate('hello'), 'hello');
 });
 
-test('does not redirect if method is not GET', async t => {
+test('does not redirect to static paths', async t => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -544,9 +544,50 @@ test('does not redirect if method is not GET', async t => {
   });
 
   const res = await request(app.listen())
-    .get('/login.html')
+    .get('/login.css')
     .set('Cookie', ['locale=es']);
   t.is(res.status, 200);
+});
+
+test('does not redirect typical domain extension when disabled', async t => {
+  const app = new Koa();
+  const i18n = new I18N({ phrases, directory, redirectTLDS: false });
+
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(i18n.redirect);
+
+  app.use(ctx => {
+    const { locale } = ctx;
+    ctx.body = { locale };
+    ctx.status = 200;
+  });
+
+  const res = await request(app.listen())
+    .get('/login.com')
+    .set('Cookie', ['locale=es']);
+  t.is(res.status, 200);
+});
+
+test('allows redirect of typical domain extensions', async t => {
+  const app = new Koa();
+  const i18n = new I18N({ phrases, directory });
+
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(i18n.redirect);
+
+  app.use(ctx => {
+    const { locale } = ctx;
+    ctx.body = { locale };
+    ctx.status = 200;
+  });
+
+  const res = await request(app.listen())
+    .get('/login.com')
+    .set('Cookie', ['locale=es']);
+  t.is(res.status, 302);
+  t.is(res.header.location, '/es/login.com');
 });
 
 test('redirects sets users last_locale', async t => {
