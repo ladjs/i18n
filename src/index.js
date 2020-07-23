@@ -4,7 +4,7 @@ const Boom = require('@hapi/boom');
 const debug = require('debug')('ladjs:i18n');
 const i18n = require('i18n');
 const locales = require('i18n-locales');
-const moment = require('moment');
+const dayjs = require('dayjs');
 const multimatch = require('multimatch');
 const titleize = require('titleize');
 const tlds = require('tlds');
@@ -28,7 +28,7 @@ class I18N {
         cookieOptions: {
           // Disable signed cookies in NODE_ENV=test
           signed: process.env.NODE_ENV !== 'test',
-          expires: moment()
+          expires: dayjs()
             .add(1, 'year')
             .toDate()
         },
