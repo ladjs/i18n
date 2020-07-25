@@ -120,6 +120,11 @@ const i18n = new I18N({
   directory: resolve('locales'),
   locales: ['en', 'es', 'zh'],
   cookie: 'locale',
+  cookieOptions: {
+    // Disable signed cookies in NODE_ENV=test
+    signed: process.env.NODE_ENV !== 'test'
+  },
+  expiryMs: 31556952000, // one year in ms
   indent: '  ',
   defaultLocale: 'en',
   // `process.env.I18N_SYNC_FILES`
@@ -186,7 +191,7 @@ We came across this missing feature and added it after our discovery through [Fo
 [MIT](LICENSE) © [Nick Baugh](http://niftylettuce.com/)
 
 
-## 
+##
 
 [npm]: https://www.npmjs.com/
 
