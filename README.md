@@ -191,7 +191,7 @@ We came across this missing feature and added it after our discovery through [Fo
 [MIT](LICENSE) © [Nick Baugh](http://niftylettuce.com/)
 
 
-##
+## 
 
 [npm]: https://www.npmjs.com/
 
