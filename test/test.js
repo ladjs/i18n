@@ -628,3 +628,10 @@ test('redirects sets users last_locale', async t => {
   t.is(res.status, 200);
   t.is(res.body.last_locale, 'en');
 });
+
+test('errors if cookieOptions.expires is set', t => {
+  t.throws(() => new I18N({ cookieOptions: { expires: new Date() } }), {
+    message:
+      'Please specify expiryMs config option instead of passing a Date to cookieOptions config'
+  });
+});

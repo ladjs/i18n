@@ -2295,11 +2295,6 @@ date-time@^2.1.0:
   dependencies:
     time-zone "^1.0.0"
 
-dayjs@^1.8.30:
-  version "1.8.30"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.30.tgz#d3b314d3ccdc179015d915fd3c6e14422c026378"
-  integrity sha512-5s5IGuP5bVvIbOWkEDcfmXsUj24fZW1NMHVVSdSFF/kW8d+alZcI9SpBKC+baEyBe+z3fUp17y75ulstv5swUw==
-
 debug@*, debug@4, debug@^4.0.0, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
