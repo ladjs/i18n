@@ -24,7 +24,6 @@
     "@hapi/boom": "^9.1.0",
     "boolean": "3.0.1",
     "country-language": "^0.1.7",
-    "dayjs": "^1.8.30",
     "debug": "^4.1.1",
     "i18n": "^0.9.1",
     "i18n-locales": "^0.0.4",
@@ -60,7 +59,7 @@
     "xo": "0.25"
   },
   "engines": {
-    "node": ">=6.4.0"
+    "node": ">=7.0.0"
   },
   "files": [
     "lib",

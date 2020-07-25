@@ -4,7 +4,6 @@ const Boom = require('@hapi/boom');
 const debug = require('debug')('ladjs:i18n');
 const i18n = require('i18n');
 const locales = require('i18n-locales');
-const dayjs = require('dayjs');
 const multimatch = require('multimatch');
 const titleize = require('titleize');
 const tlds = require('tlds');
@@ -27,11 +26,9 @@ class I18N {
         cookie: 'locale',
         cookieOptions: {
           // Disable signed cookies in NODE_ENV=test
-          signed: process.env.NODE_ENV !== 'test',
-          expires: dayjs()
-            .add(1, 'year')
-            .toDate()
+          signed: process.env.NODE_ENV !== 'test'
         },
+        expiryMs: 31556952000, // one year in ms
         indent: '  ',
         defaultLocale: 'en',
         syncFiles: boolean(process.env.I18N_SYNC_FILES || true),
@@ -69,6 +66,12 @@ class I18N {
     if (!this.config.locales.includes(this.config.defaultLocale))
       throw new Error(
         `Default locale of ${this.config.defaultLocale} must be included in list of locales`
+      );
+
+    // make sure expires is not set in cookieOptions
+    if (this.config.cookieOptions.expires)
+      throw new Error(
+        'Please specify expiryMs config option instead of passing a Date to cookieOptions config'
       );
 
     // inherit i18n object
@@ -274,7 +277,10 @@ class I18N {
     debug('found valid language "%s"', locale);
 
     // set the cookie for future requests
-    ctx.cookies.set(this.config.cookie, locale, this.config.cookieOptions);
+    ctx.cookies.set(this.config.cookie, locale, {
+      ...this.config.cookieOptions,
+      expires: new Date(Date.now() + this.config.expiryMs)
+    });
     debug('set cookies for locale "%s"', locale);
 
     // if the user is logged in and ctx.isAuthenticated() exists,
