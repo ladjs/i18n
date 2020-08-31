@@ -5,7 +5,8 @@
   "author": "Nick Baugh <niftylettuce@gmail.com> (http://niftylettuce.com/)",
   "ava": {
     "failFast": true,
-    "verbose": true
+    "verbose": true,
+    "serial": true
   },
   "bugs": {
     "url": "https://github.com/ladjs/i18n/issues",
