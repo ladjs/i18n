@@ -13,52 +13,50 @@ const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { stringify } = require('qs');
 const { toASCII } = require('punycode/');
 
-const punycodedTlds = tlds.map(tld => toASCII(tld));
+const punycodedTlds = tlds.map((tld) => toASCII(tld));
 
 class I18N {
   constructor(config = {}) {
-    this.config = Object.assign(
-      {
-        phrases: {},
-        logger: console,
-        directory: resolve('locales'),
-        locales: ['en', 'es', 'zh'],
-        cookie: 'locale',
-        cookieOptions: {
-          // Disable signed cookies in NODE_ENV=test
-          signed: process.env.NODE_ENV !== 'test'
-        },
-        expiryMs: 31556952000, // one year in ms
-        indent: '  ',
-        defaultLocale: 'en',
-        syncFiles: boolean(process.env.I18N_SYNC_FILES || true),
-        autoReload: boolean(process.env.I18N_AUTO_RELOAD || true),
-        updateFiles: boolean(process.env.I18N_UPDATE_FILES || true),
-        api: {
-          __: 't',
-          __n: 'tn',
-          __l: 'tl',
-          __h: 'th',
-          __mf: 'tmf'
-        },
-        lastLocaleField: 'last_locale',
-        ignoredRedirectGlobs: [],
-        redirectIgnoresNonGetMethods: true,
-        stringify: {
-          addQueryPrefix: true,
-          format: 'RFC1738',
-          arrayFormat: 'indices'
-        },
-        redirectTLDS: true
+    this.config = {
+      phrases: {},
+      logger: console,
+      directory: resolve('locales'),
+      locales: ['en', 'es', 'zh'],
+      cookie: 'locale',
+      cookieOptions: {
+        // Disable signed cookies in NODE_ENV=test
+        signed: process.env.NODE_ENV !== 'test'
       },
-      config
-    );
+      expiryMs: 31556952000, // one year in ms
+      indent: '  ',
+      defaultLocale: 'en',
+      syncFiles: boolean(process.env.I18N_SYNC_FILES || true),
+      autoReload: boolean(process.env.I18N_AUTO_RELOAD || true),
+      updateFiles: boolean(process.env.I18N_UPDATE_FILES || true),
+      api: {
+        __: 't',
+        __n: 'tn',
+        __l: 'tl',
+        __h: 'th',
+        __mf: 'tmf'
+      },
+      lastLocaleField: 'last_locale',
+      ignoredRedirectGlobs: [],
+      redirectIgnoresNonGetMethods: true,
+      stringify: {
+        addQueryPrefix: true,
+        format: 'RFC1738',
+        arrayFormat: 'indices'
+      },
+      redirectTLDS: true,
+      ...config
+    };
 
     // validate locales against available ones
-    if (!every(this.config.locales, l => locales.includes(l)))
+    if (!every(this.config.locales, (l) => locales.includes(l)))
       throw new Error(
         `Invalid locales: ${this.config.locales
-          .filter(str => !locales.includes(str))
+          .filter((string) => !locales.includes(string))
           .join(', ')}`
       );
 
@@ -79,7 +77,7 @@ class I18N {
 
     // expose shorthand API methods
     this.api = {};
-    Object.keys(this.config.api).forEach(key => {
+    Object.keys(this.config.api).forEach((key) => {
       this[this.config.api[key]] = this[key];
       this.api[key] = this[key];
       this.api[this.config.api[key]] = this[key];
@@ -104,8 +102,8 @@ class I18N {
   }
 
   translateError(key, locale, ...args) {
-    const str = this.translate(key, locale, ...args);
-    const err = new Error(str);
+    const string = this.translate(key, locale, ...args);
+    const err = new Error(string);
     err.no_translate = true;
     return err;
   }
@@ -133,7 +131,7 @@ class I18N {
     // also we need to expose `ctx.pathWithoutLocale`
     // as the path without locale
 
-    let locale = locales.find(l => {
+    let locale = locales.find((l) => {
       return `/${l}` === ctx.path || ctx.path.indexOf(`/${l}/`) === 0;
     });
 
@@ -193,7 +191,7 @@ class I18N {
 
     // available languages for a dropdown menu to change language
     ctx.state.availableLanguages = sortBy(
-      locales.map(locale => {
+      locales.map((locale) => {
         return {
           locale,
           url: `/${locale}${ctx.pathWithoutLocale}${
@@ -216,7 +214,7 @@ class I18N {
     // so you can pass `ctx.translate('SOME_KEY_IN_CONFIG');` and it will lookup
     // `phrases['SOMETHING']` to get a specific and constant message
     // and then it will call `t` to translate it to the user's locale
-    ctx.translate = function(...args) {
+    ctx.translate = function (...args) {
       if (typeof args[0] !== 'string' || typeof phrases[args[0]] !== 'string')
         return ctx.throw(
           Boom.badRequest('Translation for your locale failed, try again')
@@ -225,9 +223,9 @@ class I18N {
       return ctx.request.t(...args);
     };
 
-    ctx.translateError = function(...args) {
-      const str = ctx.translate(...args);
-      const err = new Error(str);
+    ctx.translateError = function (...args) {
+      const string = ctx.translate(...args);
+      const err = new Error(string);
       err.no_translate = true;
       return err;
     };
@@ -237,11 +235,19 @@ class I18N {
 
   async redirect(ctx, next) {
     debug('attempting to redirect');
+
+    // dummy-proof in case middleware is not in correct order
+    // (e.g. i18n.middleware -> i18n.redirect)
+    if (typeof ctx.request.locale === 'undefined')
+      throw new Error(
+        'Route middleware out of order, please use i18n.middleware BEFORE i18n.redirect'
+      );
+
     // do not redirect static paths
     if (extname(ctx.path) !== '') {
       if (!this.config.redirectTLDS) return next();
       const asciiFile = toASCII(basename(ctx.path));
-      if (!punycodedTlds.some(tld => asciiFile.endsWith(`.${tld}`)))
+      if (!punycodedTlds.some((tld) => asciiFile.endsWith(`.${tld}`)))
         return next();
     }
 

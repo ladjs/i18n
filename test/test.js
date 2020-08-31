@@ -8,32 +8,35 @@ const test = require('ava');
 const tlds = require('tlds');
 const { toASCII } = require('punycode/');
 
-const I18N = require('../lib');
+const I18N = require('..');
 
 const phrases = { HELLO: 'Hello there!', hello: 'hello' };
 const directory = resolve(__dirname, './fixtures');
 
-test('returns itself', t => {
+test('returns itself', (t) => {
   t.true(new I18N() instanceof I18N);
 });
 
-test('throws error with invalid locale', t => {
-  const error = t.throws(() => {
-    // eslint-disable-next-line no-new
-    new I18N({ phrases, locales: ['invalid'], directory });
-  }, Error);
-
-  t.is(error.message, 'Invalid locales: invalid');
+test('throws error with invalid locale', (t) => {
+  t.throws(
+    () => {
+      // eslint-disable-next-line no-new
+      new I18N({ phrases, locales: ['invalid'], directory });
+    },
+    {
+      message: 'Invalid locales: invalid'
+    }
+  );
 });
 
-test('translates string', t => {
+test('translates string', (t) => {
   const i18n = new I18N({ phrases, directory });
 
   t.is(i18n.translate('hello', 'en'), 'hello');
   t.is(i18n.translate('hello', 'es'), 'hola');
 });
 
-test('translates logs error for non-strings', t => {
+test('translates logs error for non-strings', (t) => {
   const logger = {
     warn: () => {}
   };
@@ -43,7 +46,7 @@ test('translates logs error for non-strings', t => {
   t.is(error.message, 'translation key missing: UNKNOWN');
 });
 
-test('ctx.translates throws error for non-strings', async t => {
+test('ctx.translates throws error for non-strings', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -59,7 +62,7 @@ test('ctx.translates throws error for non-strings', async t => {
   });
   app.use(session());
   app.use(i18n.middleware);
-  app.use(ctx => {
+  app.use((ctx) => {
     ctx.translate({}, 'en');
   });
 
@@ -68,13 +71,13 @@ test('ctx.translates throws error for non-strings', async t => {
   t.is(res.body.message, 'Translation for your locale failed, try again');
 });
 
-test('ctx.state.l converts path to locale', async t => {
+test('ctx.state.l converts path to locale', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
-  app.use(ctx => {
+  app.use((ctx) => {
     ctx.state.locale = 'es';
     ctx.body = {
       path: ctx.state.l('/random/path'),
@@ -88,14 +91,14 @@ test('ctx.state.l converts path to locale', async t => {
   t.is(res.body.pathBlank, '/es');
 });
 
-test('returns correct locale from path', async t => {
+test('returns correct locale from path', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -107,34 +110,32 @@ test('returns correct locale from path', async t => {
   t.is(res.body.locale, 'en');
 });
 
-test('returns correct locale from cookie', async t => {
+test('returns correct locale from cookie', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
   });
 
-  const res = await request(app.listen())
-    .get('/')
-    .set('Cookie', ['locale=es']);
+  const res = await request(app.listen()).get('/').set('Cookie', ['locale=es']);
   t.is(res.status, 200);
   t.is(res.body.locale, 'es');
 });
 
-test('returns correct locale from Accept-Language header', async t => {
+test('returns correct locale from Accept-Language header', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -148,7 +149,7 @@ test('returns correct locale from Accept-Language header', async t => {
   t.is(res.body.locale, 'en');
 });
 
-test('returns correct locale from user', async t => {
+test('returns correct locale from user', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -163,7 +164,7 @@ test('returns correct locale from user', async t => {
   app.use(session());
   app.use(i18n.middleware);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -175,7 +176,7 @@ test('returns correct locale from user', async t => {
   t.is(res.body.locale, 'en');
 });
 
-test('returns correct locale from default', async t => {
+test('returns correct locale from default', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -186,7 +187,7 @@ test('returns correct locale from default', async t => {
   app.use(session());
   app.use(i18n.middleware);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -198,7 +199,7 @@ test('returns correct locale from default', async t => {
   t.is(res.body.locale, 'en');
 });
 
-test('redirects if locale is not avaiable', async t => {
+test('redirects if locale is not avaiable', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -213,7 +214,7 @@ test('redirects if locale is not avaiable', async t => {
   app.use(session());
   app.use(i18n.middleware);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -225,7 +226,7 @@ test('redirects if locale is not avaiable', async t => {
   t.is(res.header.location, '/en/');
 });
 
-test('redirects if locale is not avaiable with query', async t => {
+test('redirects if locale is not avaiable with query', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -241,7 +242,7 @@ test('redirects if locale is not avaiable with query', async t => {
   app.use(session());
   app.use(i18n.middleware);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -253,14 +254,14 @@ test('redirects if locale is not avaiable with query', async t => {
   t.is(res.header.location, '/en/??a=b');
 });
 
-test('prefers path over cookie', async t => {
+test('prefers path over cookie', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -274,14 +275,14 @@ test('prefers path over cookie', async t => {
   t.is(res.body.locale, 'es');
 });
 
-test('prefers cookie over Accept-Language header', async t => {
+test('prefers cookie over Accept-Language header', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
   app.use(session());
   app.use(i18n.middleware);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -296,7 +297,7 @@ test('prefers cookie over Accept-Language header', async t => {
   t.is(res.body.locale, 'es');
 });
 
-test('does not redirect with ignored redirect globs', async t => {
+test('does not redirect with ignored redirect globs', async (t) => {
   const app = new Koa();
   const i18n = new I18N({
     phrases,
@@ -308,7 +309,7 @@ test('does not redirect with ignored redirect globs', async t => {
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -332,7 +333,7 @@ test('does not redirect with ignored redirect globs', async t => {
 });
 
 // https://github.com/ladjs/lad/issues/372
-test('does not duplicate querystring if no locale provided', async t => {
+test('does not duplicate querystring if no locale provided', async (t) => {
   // https://lad.sh?test=test?test=test?test=test%3Ftest%3Dtest
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
@@ -341,7 +342,7 @@ test('does not duplicate querystring if no locale provided', async t => {
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -355,7 +356,7 @@ test('does not duplicate querystring if no locale provided', async t => {
   t.is(res.headers.location, '/en?test=test%3Ftest%3Dtest%3Ftest%3Dtest');
 });
 
-test('redirectIgnoresNonGetMethods', async t => {
+test('redirectIgnoresNonGetMethods', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -363,7 +364,7 @@ test('redirectIgnoresNonGetMethods', async t => {
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -377,7 +378,7 @@ test('redirectIgnoresNonGetMethods', async t => {
   t.is(res.status, 200);
 });
 
-test('ignoredRedirectGlobs', async t => {
+test('ignoredRedirectGlobs', async (t) => {
   const app = new Koa();
   const i18n = new I18N({
     ignoredRedirectGlobs: ['/foo', '/baz/**/*'],
@@ -389,7 +390,7 @@ test('ignoredRedirectGlobs', async t => {
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -402,7 +403,7 @@ test('ignoredRedirectGlobs', async t => {
   t.is(res.status, 200);
 });
 
-test('redirects to correct path based on locale set via cookie', async t => {
+test('redirects to correct path based on locale set via cookie', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -410,21 +411,19 @@ test('redirects to correct path based on locale set via cookie', async t => {
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
   });
 
-  const res = await request(app.listen())
-    .get('/')
-    .set('Cookie', ['locale=es']);
+  const res = await request(app.listen()).get('/').set('Cookie', ['locale=es']);
 
   t.is(res.status, 302);
   t.is(res.headers.location, '/es');
 });
 
-test(`saves last_locale to user's ctx`, async t => {
+test(`saves last_locale to user's ctx`, async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -438,7 +437,7 @@ test(`saves last_locale to user's ctx`, async t => {
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -449,7 +448,7 @@ test(`saves last_locale to user's ctx`, async t => {
   t.is(res.status, 200);
 });
 
-test(`logs error if saves fails for user ctx`, async t => {
+test(`logs error if saves fails for user ctx`, async (t) => {
   const app = new Koa();
   const saveError = new Error('test error');
   const logger = {
@@ -471,7 +470,7 @@ test(`logs error if saves fails for user ctx`, async t => {
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -484,7 +483,7 @@ test(`logs error if saves fails for user ctx`, async t => {
   t.true(spy.alwaysCalledWithExactly(saveError));
 });
 
-test('returns an error object with no_translate=true', t => {
+test('returns an error object with no_translate=true', (t) => {
   const i18n = new I18N({ phrases, directory });
   t.is(i18n.translate('hello', 'en'), 'hello');
   const err = i18n.translateError('hello', 'es');
@@ -492,7 +491,7 @@ test('returns an error object with no_translate=true', t => {
   t.is(err.message, 'hola');
 });
 
-test('ctx.translates throws error with no_translate', async t => {
+test('ctx.translates throws error with no_translate', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -508,7 +507,7 @@ test('ctx.translates throws error with no_translate', async t => {
   });
   app.use(session());
   app.use(i18n.middleware);
-  app.use(ctx => {
+  app.use((ctx) => {
     const err = ctx.translateError('HELLO');
     t.true(err.no_translate);
     ctx.throw(err);
@@ -519,19 +518,19 @@ test('ctx.translates throws error with no_translate', async t => {
   t.is(res.body.message, 'Hello there!');
 });
 
-test('errors if default locale does not exist', t => {
+test('errors if default locale does not exist', (t) => {
   t.throws(() => new I18N({ phrases, directory, defaultLocale: 'de' }), {
     message: 'Default locale of de must be included in list of locales'
   });
 });
 
-test('translate default locale', t => {
+test('translate default locale', (t) => {
   const i18n = new I18N({ phrases, directory });
 
   t.is(i18n.translate('hello'), 'hello');
 });
 
-test('does not redirect to static paths', async t => {
+test('does not redirect to static paths', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -539,7 +538,7 @@ test('does not redirect to static paths', async t => {
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -551,7 +550,7 @@ test('does not redirect to static paths', async t => {
   t.is(res.status, 200);
 });
 
-test('does not redirect typical domain extension when disabled', async t => {
+test('does not redirect typical domain extension when disabled', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory, redirectTLDS: false });
 
@@ -559,7 +558,7 @@ test('does not redirect typical domain extension when disabled', async t => {
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = { locale };
     ctx.status = 200;
@@ -572,7 +571,7 @@ test('does not redirect typical domain extension when disabled', async t => {
 });
 
 for (const tld of tlds) {
-  test(`allows redirect of ${tld} domain extension`, async t => {
+  test(`allows redirect of ${tld} domain extension`, async (t) => {
     const app = new Koa();
     const i18n = new I18N({ phrases, directory });
 
@@ -580,7 +579,7 @@ for (const tld of tlds) {
     app.use(i18n.middleware);
     app.use(i18n.redirect);
 
-    app.use(ctx => {
+    app.use((ctx) => {
       const { locale } = ctx;
       ctx.body = { locale };
       ctx.status = 200;
@@ -593,15 +592,13 @@ for (const tld of tlds) {
     t.is(res.status, 302);
     t.is(res.header.location, `/es/login.${toASCII(tld)}`);
 
-    res = await request(app.listen())
-      .get(route)
-      .set('Cookie', ['locale=es']);
+    res = await request(app.listen()).get(route).set('Cookie', ['locale=es']);
     t.is(res.status, 302);
     t.is(res.header.location, `/es/login.${toASCII(tld)}`);
   });
 }
 
-test('redirects sets users last_locale', async t => {
+test('redirects sets users last_locale', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
@@ -615,7 +612,7 @@ test('redirects sets users last_locale', async t => {
   app.use(i18n.middleware);
   app.use(i18n.redirect);
 
-  app.use(ctx => {
+  app.use((ctx) => {
     const { locale } = ctx;
     ctx.body = {
       locale,
@@ -629,9 +626,21 @@ test('redirects sets users last_locale', async t => {
   t.is(res.body.last_locale, 'en');
 });
 
-test('errors if cookieOptions.expires is set', t => {
+test('errors if cookieOptions.expires is set', (t) => {
   t.throws(() => new I18N({ cookieOptions: { expires: new Date() } }), {
     message:
       'Please specify expiryMs config option instead of passing a Date to cookieOptions config'
   });
+});
+
+test('errors if route out of order', async (t) => {
+  const app = new Koa();
+  const i18n = new I18N({ phrases, directory });
+  app.use(i18n.redirect);
+  app.use(i18n.middleware);
+  app.use((ctx) => {
+    ctx.status = 200;
+  });
+  const res = await request(app.listen()).get('/');
+  t.is(res.status, 500);
 });

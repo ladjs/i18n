@@ -25,50 +25,46 @@
     "boolean": "3.0.1",
     "country-language": "^0.1.7",
     "debug": "^4.1.1",
-    "i18n": "^0.9.1",
+    "i18n": "^0.13.2",
     "i18n-locales": "^0.0.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "multimatch": "^4.0.0",
     "punycode": "^2.1.1",
     "qs": "^6.9.4",
     "titleize": "^2.1.0",
-    "tlds": "^1.207.0"
+    "tlds": "^1.209.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
-    "ava": "2.x",
-    "codecov": "^3.6.5",
-    "cross-env": "6.x",
-    "eslint": "6.x",
+    "@commitlint/cli": "^9.1.2",
+    "@commitlint/config-conventional": "^9.1.2",
+    "ava": "^3.12.1",
+    "codecov": "^3.7.2",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.7.0",
     "eslint-config-xo-lass": "^1.0.3",
-    "eslint-plugin-node": "^11.1.0",
     "fixpack": "^3.0.6",
-    "husky": "3.x",
-    "koa": "^2.11.0",
-    "koa-generic-session": "^2.0.4",
-    "lint-staged": "^10.2.2",
-    "nyc": "^15.0.1",
-    "remark-cli": "^8.0.0",
-    "remark-preset-github": "^1.0.0",
-    "sinon": "^9.0.2",
+    "husky": "^4.2.5",
+    "koa": "^2.13.0",
+    "koa-generic-session": "^2.1.1",
+    "lint-staged": "^10.2.13",
+    "nyc": "^15.1.0",
+    "remark-cli": "^8.0.1",
+    "remark-preset-github": "^3.0.0",
+    "sinon": "^9.0.3",
     "supertest": "^4.0.2",
-    "xo": "0.25"
+    "xo": "^0.33.0"
   },
   "engines": {
-    "node": ">=7.0.0"
+    "node": ">=8.3.0"
   },
   "files": [
-    "lib",
+    "index.js",
     "locales"
   ],
   "homepage": "https://github.com/ladjs/i18n",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && npm test",
+      "pre-commit": "lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
@@ -91,7 +87,7 @@
       "git add"
     ]
   },
-  "main": "lib/index.js",
+  "main": "index.js",
   "prettier": {
     "singleQuote": true,
     "bracketSpacing": true,
@@ -107,18 +103,20 @@
     "url": "https://github.com/ladjs/i18n"
   },
   "scripts": {
-    "build": "node_modules/.bin/babel src --out-dir lib",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "lint": "xo && remark . -qfo && eslint --no-inline-config -c .lib.eslintrc lib",
-    "test": "npm run build && npm run lint && npm run test-coverage",
-    "test-coverage": "cross-env NODE_ENV=test nyc ava",
-    "watch": "node_modules/.bin/babel src --watch --out-dir lib"
+    "lint": "xo && remark . -qfo",
+    "precommit": "lint-staged && npm test",
+    "test": "npm run lint && npm run test-coverage",
+    "test-coverage": "cross-env NODE_ENV=test nyc ava"
   },
   "xo": {
     "prettier": true,
     "space": true,
     "extends": [
       "xo-lass"
-    ]
+    ],
+    "rules": {
+      "unicorn/prevent-abbreviations": "off"
+    }
   }
 }
