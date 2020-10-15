@@ -182,9 +182,7 @@ class I18N {
       debug('locale was not available redirecting user');
       return ctx.redirect(
         `/${ctx.state.locale}${ctx.pathWithoutLocale}${
-          isEmpty(ctx.query)
-            ? ''
-            : `?${stringify(ctx.query, this.config.stringify)}`
+          isEmpty(ctx.query) ? '' : stringify(ctx.query, this.config.stringify)
         }`
       );
     }
@@ -197,7 +195,7 @@ class I18N {
           url: `/${locale}${ctx.pathWithoutLocale}${
             isEmpty(ctx.query)
               ? ''
-              : `?${stringify(ctx.query, this.config.stringify)}`
+              : stringify(ctx.query, this.config.stringify)
           }`,
           name: getLanguage(locale).name[0]
         };
@@ -275,7 +273,7 @@ class I18N {
       if (redirect === `/${ctx.request.locale}/`)
         redirect = `/${ctx.request.locale}`;
       if (!isEmpty(ctx.query))
-        redirect += `${stringify(ctx.query, this.config.stringify)}`;
+        redirect += stringify(ctx.query, this.config.stringify)
       debug('no valid locale found in URL, redirecting to %s', redirect);
       return ctx.redirect(redirect);
     }
