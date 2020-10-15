@@ -273,7 +273,7 @@ class I18N {
       if (redirect === `/${ctx.request.locale}/`)
         redirect = `/${ctx.request.locale}`;
       if (!isEmpty(ctx.query))
-        redirect += stringify(ctx.query, this.config.stringify)
+        redirect += stringify(ctx.query, this.config.stringify);
       debug('no valid locale found in URL, redirecting to %s', redirect);
       return ctx.redirect(redirect);
     }
