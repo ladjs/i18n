@@ -251,7 +251,7 @@ test('redirects if locale is not avaiable with query', async (t) => {
   const res = await request(app.listen()).get('/');
 
   t.is(res.status, 302);
-  t.is(res.header.location, '/en/??a=b');
+  t.is(res.header.location, '/en/?a=b');
 });
 
 test('prefers path over cookie', async (t) => {
