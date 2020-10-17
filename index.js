@@ -191,8 +191,8 @@ class I18N {
     ctx.state.availableLanguages = sortBy(
       locales.map((locale) => {
         let url = `/${locale}${ctx.pathWithoutLocale}`;
-        // clone it so we don't affect it
-        const { query } = ctx;
+        // shallow clone it so we don't affect it
+        const query = { ...ctx.query };
         if (!isEmpty(query)) {
           // if `redirect_to` was in the URL then check if i18n was in there too
           // that way we don't have `?redirect_to=/zh` when we switch from `zh` to `en`
