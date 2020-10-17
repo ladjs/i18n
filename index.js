@@ -190,13 +190,38 @@ class I18N {
     // available languages for a dropdown menu to change language
     ctx.state.availableLanguages = sortBy(
       locales.map((locale) => {
+        let url = `/${locale}${ctx.pathWithoutLocale}`;
+        if (!isEmpty(ctx.query)) {
+          // if `redirect_to` was in the URL then check if i18n was in there too
+          // that way we don't have `?redirect_to=/zh` when we switch from `zh` to `en`
+          if (
+            typeof ctx.query.redirect_to === 'string' &&
+            ctx.query.redirect_to !== ''
+          ) {
+            for (const l of locales) {
+              // if it's directly `?redirect_to=/en`
+              if (ctx.query.redirect_to === `/${l}`) {
+                ctx.query.redirect_to = `/${locale}`;
+                break;
+              }
+
+              // if it's a path starting with a locale `?redirect_to=/en/foo`
+              if (ctx.query.redirect_to.startsWith(`/${l}/`)) {
+                ctx.query.redirect_to = ctx.query.redirect_to.replace(
+                  `/${l}/`,
+                  `/${locale}/`
+                );
+                break;
+              }
+            }
+          }
+
+          url += stringify(ctx.query, this.config.stringify);
+        }
+
         return {
           locale,
-          url: `/${locale}${ctx.pathWithoutLocale}${
-            isEmpty(ctx.query)
-              ? ''
-              : stringify(ctx.query, this.config.stringify)
-          }`,
+          url,
           name: getLanguage(locale).name[0]
         };
       }),
