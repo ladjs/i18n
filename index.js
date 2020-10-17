@@ -191,23 +191,25 @@ class I18N {
     ctx.state.availableLanguages = sortBy(
       locales.map((locale) => {
         let url = `/${locale}${ctx.pathWithoutLocale}`;
-        if (!isEmpty(ctx.query)) {
+        // clone it so we don't affect it
+        const { query } = ctx;
+        if (!isEmpty(query)) {
           // if `redirect_to` was in the URL then check if i18n was in there too
           // that way we don't have `?redirect_to=/zh` when we switch from `zh` to `en`
           if (
-            typeof ctx.query.redirect_to === 'string' &&
-            ctx.query.redirect_to !== ''
+            typeof query.redirect_to === 'string' &&
+            query.redirect_to !== ''
           ) {
             for (const l of locales) {
               // if it's directly `?redirect_to=/en`
-              if (ctx.query.redirect_to === `/${l}`) {
-                ctx.query.redirect_to = `/${locale}`;
+              if (query.redirect_to === `/${l}`) {
+                query.redirect_to = `/${locale}`;
                 break;
               }
 
               // if it's a path starting with a locale `?redirect_to=/en/foo`
-              if (ctx.query.redirect_to.startsWith(`/${l}/`)) {
-                ctx.query.redirect_to = ctx.query.redirect_to.replace(
+              if (query.redirect_to.startsWith(`/${l}/`)) {
+                query.redirect_to = query.redirect_to.replace(
                   `/${l}/`,
                   `/${locale}/`
                 );
@@ -216,7 +218,7 @@ class I18N {
             }
           }
 
-          url += stringify(ctx.query, this.config.stringify);
+          url += stringify(query, this.config.stringify);
         }
 
         return {
