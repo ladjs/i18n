@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "@hapi/boom": "^9.1.0",
-    "boolean": "3.0.1",
+    "boolean": "3.0.2",
     "country-language": "^0.1.7",
     "debug": "^4.2.0",
     "i18n": "^0.13.2",
@@ -39,21 +39,21 @@
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "ava": "^3.13.0",
-    "codecov": "^3.8.0",
+    "codecov": "^3.8.1",
     "cross-env": "^7.0.2",
-    "eslint": "^7.11.0",
+    "eslint": "^7.13.0",
     "eslint-config-xo-lass": "^1.0.4",
     "fixpack": "^3.0.6",
     "husky": "^4.3.0",
     "koa": "^2.13.0",
     "koa-generic-session": "^2.1.1",
-    "lint-staged": "^10.4.2",
+    "lint-staged": "^10.5.1",
     "nyc": "^15.1.0",
     "remark-cli": "^9.0.0",
-    "remark-preset-github": "^3.0.3",
-    "sinon": "^9.2.0",
-    "supertest": "^5.0.0",
-    "xo": "^0.34.0"
+    "remark-preset-github": "^3.0.4",
+    "sinon": "^9.2.1",
+    "supertest": "^6.0.1",
+    "xo": "^0.34.2"
   },
   "engines": {
     "node": ">=8.3.0"
