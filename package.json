@@ -1,7 +1,7 @@
 {
   "name": "@ladjs/i18n",
   "description": "i18n wrapper and Koa middleware for Lad",
-  "version": "6.0.5",
+  "version": "7.0.0",
   "author": "Nick Baugh <niftylettuce@gmail.com> (http://niftylettuce.com/)",
   "ava": {
     "failFast": true,
