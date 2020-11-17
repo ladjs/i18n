@@ -54,9 +54,7 @@ class I18N {
 
     // locales must be supplied as an array of string
     if (!Array.isArray(this.config.locales))
-      throw new Error(
-        `Locales must be an array of strings`
-      );
+      throw new Error(`Locales must be an array of strings`);
 
     // validate locales against available ones
     if (!every(this.config.locales, (l) => locales.includes(l)))
@@ -187,7 +185,8 @@ class I18N {
     if (locale !== ctx.state.locale) {
       debug('locale was not available redirecting user');
       return ctx.redirect(
-        `/${ctx.state.locale}${ctx.pathWithoutLocale}${isEmpty(ctx.query) ? '' : stringify(ctx.query, this.config.stringify)
+        `/${ctx.state.locale}${ctx.pathWithoutLocale}${
+          isEmpty(ctx.query) ? '' : stringify(ctx.query, this.config.stringify)
         }`
       );
     }
