@@ -49,6 +49,7 @@ class I18N {
         arrayFormat: 'indices'
       },
       redirectTLDS: true,
+      detectLocale: false,
       ...config
     };
 
@@ -112,7 +113,7 @@ class I18N {
     return err;
   }
 
-  middleware(ctx, next) {
+  async middleware(ctx, next) {
     const { locales, defaultLocale, phrases, cookie } = this.config;
 
     // expose api methods to `ctx.request` and `ctx.state`
@@ -128,9 +129,10 @@ class I18N {
     // in order of priority:
     //
     // 1. check the URL, if === `/de` or starts with `/de/` then locale is `de`
-    // 2. check the cookie
-    // 3. check Accept-Language last
-    // 4. check the user's lastLocale
+    // 2. use a custom function, if provided in parameters
+    // 3. check the cookie
+    // 4. check Accept-Language last
+    // 5. check the user's lastLocale
     //
     // also we need to expose `ctx.pathWithoutLocale`
     // as the path without locale
@@ -154,6 +156,12 @@ class I18N {
         ...new Set([defaultLocale, ...locales])
       ]);
       if (
+        this.config.detectLocale &&
+        typeof this.config.detectLocale === 'function'
+      ) {
+        locale = await this.config.detectLocale.call(this, ctx);
+        debug('found locale via custom function using %s', locale);
+      } else if (
         ctx.cookies.get(cookie) &&
         locales.includes(ctx.cookies.get(cookie))
       ) {

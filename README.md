@@ -75,8 +75,9 @@ This is an extremely useful method if you are using `koa-better-error-handler` p
 This middleware uses custom locale detection (in order of priority):
 
 1. Check URL (e.g. if `/de` or `/de/` then it's a `de` locale - as long as `de` is a supported locale)
-2. Check the `"locale"` cookie value (or whatever the `cookie` option is defined as)
-3. Check `Accept-Language` header
+2. Use the custom function (if provided by the `detectLocale` parameter) for locale detection
+3. Check the `"locale"` cookie value (or whatever the `cookie` option is defined as)
+4. Check `Accept-Language` header
 
 It also exposes the following:
 
@@ -150,7 +151,9 @@ const i18n = new I18N({
     format: 'RFC1738',
     arrayFormat: 'indices'
   },
-  redirectTLDS: true
+  redirectTLDS: true,
+  // function that allows using a custom logic for locale detection (can return promise)
+  detectLocale: null
 });
 ```
 
