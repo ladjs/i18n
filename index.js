@@ -82,11 +82,11 @@ class I18N {
 
     // expose shorthand API methods
     this.api = {};
-    Object.keys(this.config.api).forEach((key) => {
+    for (const key of Object.keys(this.config.api)) {
       this[this.config.api[key]] = this[key];
       this.api[key] = this[key];
       this.api[this.config.api[key]] = this[key];
-    });
+    }
 
     // configure i18n
     this.configure(this.config);

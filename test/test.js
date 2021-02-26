@@ -644,3 +644,27 @@ test('errors if route out of order', async (t) => {
   const res = await request(app.listen()).get('/');
   t.is(res.status, 500);
 });
+
+test('supports detectLocale function', async (t) => {
+  const app = new Koa();
+  const i18n = new I18N({
+    detectLocale: () => 'zh',
+    phrases,
+    directory
+  });
+
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(i18n.redirect);
+
+  app.use((ctx) => {
+    const { locale } = ctx;
+    ctx.body = { locale };
+    ctx.status = 200;
+  });
+
+  const res = await request(app.listen()).get('/');
+
+  t.is(res.status, 302);
+  t.is(res.header.location, '/zh');
+});
