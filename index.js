@@ -2,7 +2,7 @@ const { basename, extname, resolve } = require('path');
 
 const Boom = require('@hapi/boom');
 const debug = require('debug')('ladjs:i18n');
-const i18n = require('i18n');
+const { I18n } = require('i18n');
 const locales = require('i18n-locales');
 const multimatch = require('multimatch');
 const titleize = require('titleize');
@@ -78,7 +78,7 @@ class I18N {
       );
 
     // inherit i18n object
-    Object.assign(this, i18n);
+    Object.assign(this, new I18n());
 
     // expose shorthand API methods
     this.api = {};
