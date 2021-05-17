@@ -206,7 +206,7 @@ We came across this missing feature and added it after our discovery through [Fo
 
 [koa-meta]: https://github.com/ladjs/koa-meta
 
-[country-language]: https://github.com/@ladjs/country-language
+[country-language]: https://github.com/ladjs/country-language
 
 [boom]: https://github.com/hapijs/boom
 
