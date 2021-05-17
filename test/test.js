@@ -1,12 +1,12 @@
 const { resolve } = require('path');
 
+const { toASCII } = require('punycode/');
 const Koa = require('koa');
 const request = require('supertest');
 const session = require('koa-generic-session');
 const sinon = require('sinon');
 const test = require('ava');
 const tlds = require('tlds');
-const { toASCII } = require('punycode/');
 
 const I18N = require('..');
 

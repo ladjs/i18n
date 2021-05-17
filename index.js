@@ -1,5 +1,7 @@
 const { basename, extname, resolve } = require('path');
 
+const { toASCII } = require('punycode/');
+
 const Boom = require('@hapi/boom');
 const debug = require('debug')('ladjs:i18n');
 const { I18n } = require('i18n');
@@ -11,7 +13,6 @@ const { boolean } = require('boolean');
 const { getLanguage } = require('country-language');
 const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { stringify } = require('qs');
-const { toASCII } = require('punycode/');
 
 const punycodedTlds = tlds.map((tld) => toASCII(tld));
 
@@ -27,7 +28,7 @@ class I18N {
         // Disable signed cookies in NODE_ENV=test
         signed: process.env.NODE_ENV !== 'test'
       },
-      expiryMs: 31556952000, // one year in ms
+      expiryMs: 31_556_952_000, // one year in ms
       indent: '  ',
       defaultLocale: 'en',
       syncFiles: boolean(process.env.I18N_SYNC_FILES || true),
