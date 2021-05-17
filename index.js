@@ -10,7 +10,7 @@ const multimatch = require('multimatch');
 const titleize = require('titleize');
 const tlds = require('tlds');
 const { boolean } = require('boolean');
-const { getLanguage } = require('country-language');
+const { getLanguage } = require('@ladjs/country-language');
 const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { stringify } = require('qs');
 

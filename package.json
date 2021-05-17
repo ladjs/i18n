@@ -23,8 +23,8 @@
   ],
   "dependencies": {
     "@hapi/boom": "^9.1.2",
+    "@ladjs/country-language": "^0.2.1",
     "boolean": "3.0.4",
-    "country-language": "^0.1.7",
     "debug": "^4.3.1",
     "i18n": "^0.13.3",
     "i18n-locales": "^0.0.5",
