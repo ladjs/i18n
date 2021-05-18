@@ -118,7 +118,8 @@
     ],
     "rules": {
       "unicorn/prevent-abbreviations": "off",
-      "unicorn/prefer-module": "off"
+      "unicorn/prefer-module": "off",
+      "unicorn/numeric-separators-style": "off"
     }
   }
 }

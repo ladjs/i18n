@@ -28,7 +28,7 @@ class I18N {
         // Disable signed cookies in NODE_ENV=test
         signed: process.env.NODE_ENV !== 'test'
       },
-      expiryMs: 31_556_952_000, // one year in ms
+      expiryMs: 31556952000, // one year in ms
       indent: '  ',
       defaultLocale: 'en',
       syncFiles: boolean(process.env.I18N_SYNC_FILES || true),
