@@ -550,6 +550,31 @@ test('does not redirect to static paths', async (t) => {
   t.is(res.status, 200);
 });
 
+test('does not redirect to static sourcemap paths', async (t) => {
+  const app = new Koa();
+  const i18n = new I18N({ phrases, directory });
+
+  app.use(session());
+  app.use(i18n.middleware);
+  app.use(i18n.redirect);
+
+  app.use((ctx) => {
+    const { locale } = ctx;
+    ctx.body = { locale };
+    ctx.status = 200;
+  });
+
+  let res = await request(app.listen())
+    .get('/login.css.map')
+    .set('Cookie', ['locale=es']);
+  t.is(res.status, 200);
+
+  res = await request(app.listen())
+    .get('/login.js.map')
+    .set('Cookie', ['locale=es']);
+  t.is(res.status, 200);
+});
+
 test('does not redirect typical domain extension when disabled', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory, redirectTLDS: false });
