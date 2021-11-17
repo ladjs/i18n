@@ -285,7 +285,14 @@ class I18N {
     if (extname(ctx.path) !== '') {
       if (!this.config.redirectTLDS) return next();
       const asciiFile = toASCII(basename(ctx.path));
-      if (!punycodedTlds.some((tld) => asciiFile.endsWith(`.${tld}`)))
+
+      // do a speciality check for .js.map and .css.map
+      // since .map is in tlds
+      if (
+        !punycodedTlds.some((tld) => asciiFile.endsWith(`.${tld}`)) ||
+        asciiFile.endsWith('.js.map') ||
+        asciiFile.endsWith('.css.map')
+      )
         return next();
     }
 
