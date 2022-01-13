@@ -1,3 +1,4 @@
+const process = require('process');
 const { basename, extname, resolve } = require('path');
 
 const { toASCII } = require('punycode/');

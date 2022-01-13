@@ -62,7 +62,7 @@ app.listen();
 
 ### i18n.translate(key, locale, ...args)
 
-Returns translation for phrase `key` with the given `locale`.  Optionally pass additional arguments, e.g. format specifier replacements for use in the phrase.  For example if you have a phrase of "An error occurred %s" with a key of "ERROR_OCCURRED", and you use it as such `i18n.translate('ERROR_OCCURRED', 'en', 'some error message')` then it would return `'An error occurred some error message`.
+Returns translation for phrase `key` with the given `locale`.  Optionally pass additional arguments, e.g. format specifier replacements for use in the phrase.  For example if you have a phrase of "An error occurred %s" with a key of "ERROR\_OCCURRED", and you use it as such `i18n.translate('ERROR_OCCURRED', 'en', 'some error message')` then it would return `'An error occurred some error message`.
 
 ### i18n.translateError(key, locale, ...args)
 
