@@ -38,7 +38,7 @@ test('translates string', (t) => {
 
 test('translates logs error for non-strings', (t) => {
   const logger = {
-    warn: () => {}
+    warn() {}
   };
   const i18n = new I18N({ phrases, directory, logger });
 
@@ -452,7 +452,7 @@ test(`logs error if saves fails for user ctx`, async (t) => {
   const app = new Koa();
   const saveError = new Error('test error');
   const logger = {
-    error: () => {}
+    error() {}
   };
   const spy = sinon.spy(logger, 'error');
   const i18n = new I18N({ phrases, directory, logger });

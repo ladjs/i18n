@@ -24,36 +24,36 @@
   "dependencies": {
     "@hapi/boom": "^9.1.4",
     "@ladjs/country-language": "^0.2.1",
-    "boolean": "3.1.4",
+    "boolean": "3.2.0",
     "debug": "^4.3.3",
-    "i18n": "^0.13.4",
+    "i18n": "^0.14.1",
     "i18n-locales": "^0.0.5",
     "lodash": "^4.17.21",
     "multimatch": "5",
     "punycode": "^2.1.1",
     "qs": "^6.10.3",
     "titleize": "2",
-    "tlds": "^1.228.0"
+    "tlds": "^1.230.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.0.2",
-    "@commitlint/config-conventional": "^16.0.0",
+    "@commitlint/cli": "^16.2.1",
+    "@commitlint/config-conventional": "^16.2.1",
     "ava": "^4.0.1",
     "codecov": "^3.8.2",
     "cross-env": "^7.0.3",
-    "eslint": "^8.6.0",
+    "eslint": "^8.9.0",
     "eslint-config-xo-lass": "^1.0.6",
     "fixpack": "^4.0.0",
     "husky": "^7.0.4",
     "koa": "^2.13.4",
     "koa-generic-session": "^2.3.0",
-    "lint-staged": "^12.1.7",
+    "lint-staged": "^12.3.4",
     "nyc": "^15.1.0",
     "remark-cli": "^10.0.1",
     "remark-preset-github": "^4.0.1",
-    "sinon": "^12.0.1",
-    "supertest": "^6.2.1",
-    "xo": "^0.47.0"
+    "sinon": "^13.0.1",
+    "supertest": "^6.2.2",
+    "xo": "^0.48.0"
   },
   "engines": {
     "node": ">=8.3.0"
