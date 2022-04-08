@@ -25,7 +25,7 @@
     "@hapi/boom": "^9.1.4",
     "@ladjs/country-language": "^0.2.1",
     "boolean": "3.2.0",
-    "debug": "^4.3.3",
+    "debug": "^4.3.4",
     "i18n": "^0.14.1",
     "i18n-locales": "^0.0.5",
     "lodash": "^4.17.21",
