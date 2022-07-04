@@ -1,10 +1,10 @@
 const process = require('process');
 const { basename, extname, resolve } = require('path');
+const { debuglog } = require('util');
 
 const { toASCII } = require('punycode/');
 
 const Boom = require('@hapi/boom');
-const debug = require('debug')('ladjs:i18n');
 const { I18n } = require('i18n');
 const locales = require('i18n-locales');
 const multimatch = require('multimatch');
@@ -14,6 +14,8 @@ const { boolean } = require('boolean');
 const { getLanguage } = require('@ladjs/country-language');
 const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { stringify } = require('qs');
+
+const debug = debuglog('ladjs:i18n');
 
 const punycodedTlds = tlds.map((tld) => toASCII(tld));
 
