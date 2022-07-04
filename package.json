@@ -3,123 +3,73 @@
   "description": "i18n wrapper and Koa middleware for Lad",
   "version": "7.2.6",
   "author": "Nick Baugh <niftylettuce@gmail.com> (http://niftylettuce.com/)",
-  "ava": {
-    "failFast": true,
-    "verbose": true,
-    "serial": true
-  },
   "bugs": {
     "url": "https://github.com/ladjs/i18n/issues",
     "email": "niftylettuce@gmail.com"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
   },
   "contributors": [
     "Nick Baugh <niftylettuce@gmail.com> (http://niftylettuce.com/)",
     "shadowgate15 (https://github.com/shadowgate15)"
   ],
   "dependencies": {
-    "@hapi/boom": "^9.1.4",
-    "@ladjs/country-language": "^0.2.1",
+    "@hapi/boom": "^10.0.0",
+    "@ladjs/country-language": "^1.0.1",
     "boolean": "3.2.0",
-    "debug": "^4.3.3",
-    "i18n": "^0.14.1",
+    "i18n": "^0.15.0",
     "i18n-locales": "^0.0.5",
     "lodash": "^4.17.21",
     "multimatch": "5",
     "punycode": "^2.1.1",
-    "qs": "^6.10.3",
+    "qs": "^6.11.0",
     "titleize": "2",
-    "tlds": "^1.230.0"
+    "tlds": "^1.231.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.2.1",
-    "@commitlint/config-conventional": "^16.2.1",
-    "ava": "^4.0.1",
-    "codecov": "^3.8.2",
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "ava": "^4.3.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.9.0",
-    "eslint-config-xo-lass": "^1.0.6",
+    "eslint": "^8.19.0",
+    "eslint-config-xo-lass": "^2.0.1",
     "fixpack": "^4.0.0",
-    "husky": "^7.0.4",
+    "husky": "^8.0.1",
     "koa": "^2.13.4",
     "koa-generic-session": "^2.3.0",
-    "lint-staged": "^12.3.4",
+    "lint-staged": "^13.0.3",
     "nyc": "^15.1.0",
-    "remark-cli": "^10.0.1",
-    "remark-preset-github": "^4.0.1",
-    "sinon": "^13.0.1",
-    "supertest": "^6.2.2",
-    "xo": "^0.48.0"
+    "remark-cli": "^11.0.0",
+    "remark-preset-github": "^4.0.4",
+    "sinon": "^14.0.0",
+    "supertest": "^6.2.4",
+    "xo": "^0.50.0"
   },
   "engines": {
-    "node": ">=8.3.0"
+    "node": ">=14"
   },
   "files": [
-    "index.js",
-    "locales"
+    "index.js"
   ],
   "homepage": "https://github.com/ladjs/i18n",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
   "keywords": [
     "@ladjs/i18n",
-    "lass"
+    "i18n",
+    "lad",
+    "lass",
+    "locale",
+    "locales",
+    "localization",
+    "translate"
   ],
   "license": "MIT",
-  "lint-staged": {
-    "*.js": [
-      "xo --fix",
-      "git add"
-    ],
-    "*.md": [
-      "remark . -qfo",
-      "git add"
-    ],
-    "package.json": [
-      "fixpack",
-      "git add"
-    ]
-  },
   "main": "index.js",
-  "prettier": {
-    "singleQuote": true,
-    "bracketSpacing": true,
-    "trailingComma": "none"
-  },
-  "remarkConfig": {
-    "plugins": [
-      "preset-github"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ladjs/i18n"
   },
   "scripts": {
-    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "lint": "xo && remark . -qfo",
-    "precommit": "lint-staged && npm test",
-    "test": "npm run lint && npm run test-coverage",
-    "test-coverage": "cross-env NODE_ENV=test nyc ava"
-  },
-  "xo": {
-    "prettier": true,
-    "space": true,
-    "extends": [
-      "xo-lass"
-    ],
-    "rules": {
-      "unicorn/prevent-abbreviations": "off",
-      "unicorn/prefer-module": "off",
-      "unicorn/numeric-separators-style": "off"
-    }
+    "lint": "xo --fix && remark . -qfo && fixpack",
+    "prepare": "husky install",
+    "pretest": "npm run lint",
+    "test": "cross-env NODE_ENV=test nyc ava"
   }
 }
