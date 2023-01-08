@@ -196,6 +196,7 @@ class I18N {
     // if the locale was not available then redirect user
     if (locale !== ctx.state.locale) {
       debug('locale was not available redirecting user');
+      ctx.status = 301;
       return ctx.redirect(
         `/${ctx.state.locale}${
           ctx.pathWithoutLocale === '/' ? '' : ctx.pathWithoutLocale
@@ -322,7 +323,7 @@ class I18N {
     // if the URL did not have a valid language found
     // then redirect the user to their detected locale
     if (!hasLang) {
-      ctx.status = 302;
+      ctx.status = 301;
       let redirect = `/${ctx.request.locale}${ctx.path}`;
       if (redirect === `/${ctx.request.locale}/`)
         redirect = `/${ctx.request.locale}`;

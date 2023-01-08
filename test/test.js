@@ -222,7 +222,7 @@ test('redirects if locale is not avaiable', async (t) => {
 
   const res = await request(app.listen()).get('/');
 
-  t.is(res.status, 302);
+  t.is(res.status, 301);
   t.is(res.header.location, '/en');
 });
 
@@ -250,7 +250,7 @@ test('redirects if locale is not avaiable with query', async (t) => {
 
   const res = await request(app.listen()).get('/');
 
-  t.is(res.status, 302);
+  t.is(res.status, 301);
   t.is(res.header.location, '/en?a=b');
 });
 
@@ -328,7 +328,7 @@ test('does not redirect with ignored redirect globs', async (t) => {
   res = await request(app.listen())
     .get('/login/beep/baz')
     .set('Cookie', ['locale=es']);
-  t.is(res.status, 302);
+  t.is(res.status, 301);
   t.is(res.headers.location, '/es/login/beep/baz');
 });
 
@@ -352,7 +352,7 @@ test('does not duplicate querystring if no locale provided', async (t) => {
     '/?test=test?test=test?test=test'
   );
 
-  t.is(res.status, 302);
+  t.is(res.status, 301);
   t.is(res.headers.location, '/en?test=test%3Ftest%3Dtest%3Ftest%3Dtest');
 });
 
@@ -371,7 +371,7 @@ test('redirectIgnoresNonGetMethods', async (t) => {
   });
 
   let res = await request(app.listen()).get('/');
-  t.is(res.status, 302);
+  t.is(res.status, 301);
   t.is(res.headers.location, '/en');
 
   res = await request(app.listen()).post('/');
@@ -419,7 +419,7 @@ test('redirects to correct path based on locale set via cookie', async (t) => {
 
   const res = await request(app.listen()).get('/').set('Cookie', ['locale=es']);
 
-  t.is(res.status, 302);
+  t.is(res.status, 301);
   t.is(res.headers.location, '/es');
 });
 
@@ -614,11 +614,11 @@ for (const tld of tlds) {
     let res = await request(app.listen())
       .get(route)
       .set('Cookie', ['locale=es']);
-    t.is(res.status, 302);
+    t.is(res.status, 301);
     t.is(res.header.location, `/es/login.${toASCII(tld)}`);
 
     res = await request(app.listen()).get(route).set('Cookie', ['locale=es']);
-    t.is(res.status, 302);
+    t.is(res.status, 301);
     t.is(res.header.location, `/es/login.${toASCII(tld)}`);
   });
 }
@@ -690,6 +690,6 @@ test('supports detectLocale function', async (t) => {
 
   const res = await request(app.listen()).get('/');
 
-  t.is(res.status, 302);
+  t.is(res.status, 301);
   t.is(res.header.location, '/zh');
 });
