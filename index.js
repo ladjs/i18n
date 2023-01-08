@@ -197,7 +197,9 @@ class I18N {
     if (locale !== ctx.state.locale) {
       debug('locale was not available redirecting user');
       return ctx.redirect(
-        `/${ctx.state.locale}${ctx.pathWithoutLocale}${
+        `/${ctx.state.locale}${
+          ctx.pathWithoutLocale === '/' ? '' : ctx.pathWithoutLocale
+        }${
           isEmpty(ctx.query) ? '' : stringify(ctx.query, this.config.stringify)
         }`
       );
@@ -206,7 +208,9 @@ class I18N {
     // available languages for a dropdown menu to change language
     ctx.state.availableLanguages = sortBy(
       locales.map((locale) => {
-        let url = `/${locale}${ctx.pathWithoutLocale}`;
+        let url = `/${locale}${
+          ctx.pathWithoutLocale === '/' ? '' : ctx.pathWithoutLocale
+        }`;
         // shallow clone it so we don't affect it
         const query = { ...ctx.query };
         if (!isEmpty(query)) {
