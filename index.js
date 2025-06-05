@@ -10,7 +10,6 @@ const locales = require('i18n-locales');
 const multimatch = require('multimatch');
 const titleize = require('titleize');
 const tlds = require('tlds');
-const { boolean } = require('boolean');
 const { getLanguage } = require('@ladjs/country-language');
 const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { stringify } = require('qs');
@@ -18,6 +17,18 @@ const { stringify } = require('qs');
 const debug = debuglog('ladjs:i18n');
 
 const punycodedTlds = tlds.map((tld) => toASCII(tld));
+
+function toBoolean(val) {
+  if (typeof val === 'boolean') return val;
+  if (typeof val === 'number') return val !== 0;
+  if (typeof val === 'string') {
+    const normalized = val.trim().toLowerCase();
+    if (['true', '1', 'yes', 'on', 'y', 't'].includes(normalized)) return true;
+    if (['false', '0', 'no', 'off', 'n', 'f', ''].includes(normalized)) return false;
+    return Boolean(normalized);
+  }
+  return Boolean(val);
+}
 
 class I18N {
   constructor(config = {}) {
@@ -34,9 +45,9 @@ class I18N {
       expiryMs: 31556952000, // one year in ms
       indent: '  ',
       defaultLocale: 'en',
-      syncFiles: boolean(process.env.I18N_SYNC_FILES || true),
-      autoReload: boolean(process.env.I18N_AUTO_RELOAD || false),
-      updateFiles: boolean(process.env.I18N_UPDATE_FILES || true),
+      syncFiles: toBoolean(process.env.I18N_SYNC_FILES || true),
+      autoReload: toBoolean(process.env.I18N_AUTO_RELOAD || false),
+      updateFiles: toBoolean(process.env.I18N_UPDATE_FILES || true),
       api: {
         __: 't',
         __n: 'tn',
