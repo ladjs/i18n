@@ -14,7 +14,6 @@
   "dependencies": {
     "@hapi/boom": "^10.0.0",
     "@ladjs/country-language": "^1.0.1",
-    "boolean": "3.2.0",
     "i18n": "^0.15.0",
     "i18n-locales": "^0.0.5",
     "lodash": "^4.17.21",
