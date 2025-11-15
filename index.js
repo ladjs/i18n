@@ -1,6 +1,6 @@
-const process = require('process');
-const { basename, extname, resolve } = require('path');
-const { debuglog } = require('util');
+const process = require('node:process');
+const { basename, extname, resolve } = require('node:path');
+const { debuglog } = require('node:util');
 
 const { toASCII } = require('punycode/');
 

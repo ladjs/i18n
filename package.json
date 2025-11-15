@@ -28,8 +28,8 @@
     "@commitlint/config-conventional": "^17.0.3",
     "ava": "^4.3.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.19.0",
-    "eslint-config-xo-lass": "^2.0.1",
+    "eslint": "8.39.0",
+    "eslint-config-xo-lass": "2.0.1",
     "fixpack": "^4.0.0",
     "husky": "^8.0.1",
     "koa": "^2.13.4",
@@ -39,7 +39,7 @@
     "remark-preset-github": "^4.0.4",
     "sinon": "^14.0.0",
     "supertest": "^6.2.4",
-    "xo": "^0.50.0"
+    "xo": "0.53.1"
   },
   "engines": {
     "node": ">=14"
