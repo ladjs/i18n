@@ -34,7 +34,6 @@
     "husky": "^8.0.1",
     "koa": "^2.13.4",
     "koa-generic-session": "^2.3.0",
-    "lint-staged": "^13.0.3",
     "nyc": "^15.1.0",
     "remark-cli": "^11.0.0",
     "remark-preset-github": "^4.0.4",
