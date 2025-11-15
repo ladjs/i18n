@@ -46,28 +46,17 @@ test('translates logs error for non-strings', (t) => {
   t.is(error.message, 'translation key missing: UNKNOWN');
 });
 
-test('ctx.translates throws error for non-strings', async (t) => {
+test('ctx.translate returns error for non-strings', async (t) => {
   const app = new Koa();
   const i18n = new I18N({ phrases, directory });
 
-  app.use(async (ctx, next) => {
-    try {
-      await next();
-    } catch (err) {
-      ctx.status = err.statusCode || err.status || 500;
-      ctx.body = {
-        message: err.message
-      };
-    }
-  });
   app.use(session());
   app.use(i18n.middleware);
   app.use((ctx) => {
-    ctx.translate({}, 'en');
+    ctx.body = { message: ctx.translate({}, 'en') };
   });
 
   const res = await request(app.listen()).get('/en');
-
   t.is(res.body.message, 'Translation for your locale failed, try again');
 });
 

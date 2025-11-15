@@ -4,7 +4,6 @@ const { debuglog } = require('util');
 
 const { toASCII } = require('punycode/');
 
-const Boom = require('@hapi/boom');
 const { I18n } = require('i18n');
 const locales = require('i18n-locales');
 const multimatch = require('multimatch');
@@ -118,7 +117,7 @@ class I18N {
   }
 
   async middleware(ctx, next) {
-    const { locales, defaultLocale, phrases, cookie } = this.config;
+    const { locales, defaultLocale, phrases, cookie, logger } = this.config;
 
     // expose api methods to `ctx.request` and `ctx.state`
     this.init(ctx.request, ctx.state);
@@ -261,10 +260,15 @@ class I18N {
     // `phrases['SOMETHING']` to get a specific and constant message
     // and then it will call `t` to translate it to the user's locale
     ctx.translate = function (...args) {
-      if (typeof args[0] !== 'string' || typeof phrases[args[0]] !== 'string')
-        return ctx.throw(
-          Boom.badRequest('Translation for your locale failed, try again')
+      if (typeof args[0] !== 'string' || typeof phrases[args[0]] !== 'string') {
+        const err = new TypeError(
+          'Translation for your locale failed, try again'
         );
+        err.args = args;
+        logger.error(err);
+        return err.message;
+      }
+
       args[0] = phrases[args[0]];
       return ctx.request.t(...args);
     };
