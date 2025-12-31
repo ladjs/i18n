@@ -1,20 +1,38 @@
 const process = require('node:process');
 const { basename, extname, resolve } = require('node:path');
 const { debuglog } = require('node:util');
-
 const { toASCII } = require('punycode/');
-
 const { I18n } = require('i18n');
 const locales = require('i18n-locales');
 const multimatch = require('multimatch');
 const titleize = require('titleize');
 const tlds = require('tlds');
-const { boolean } = require('boolean');
 const { getLanguage } = require('@ladjs/country-language');
 const { isEmpty, sortBy, every, isFunction } = require('lodash');
 const { stringify } = require('qs');
 
 const debug = debuglog('ladjs:i18n');
+
+// Helper function to convert values to boolean (replaces deprecated 'boolean' package)
+function toBoolean(value) {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') {
+    const str = value.toLowerCase().trim();
+    if (str === 'true' || str === '1' || str === 'yes' || str === 'on')
+      return true;
+    if (
+      str === 'false' ||
+      str === '0' ||
+      str === 'no' ||
+      str === 'off' ||
+      str === ''
+    )
+      return false;
+  }
+
+  if (typeof value === 'number') return value !== 0;
+  return Boolean(value);
+}
 
 const punycodedTlds = tlds.map((tld) => toASCII(tld));
 
@@ -33,9 +51,9 @@ class I18N {
       expiryMs: 31556952000, // one year in ms
       indent: '  ',
       defaultLocale: 'en',
-      syncFiles: boolean(process.env.I18N_SYNC_FILES || true),
-      autoReload: boolean(process.env.I18N_AUTO_RELOAD || false),
-      updateFiles: boolean(process.env.I18N_UPDATE_FILES || true),
+      syncFiles: toBoolean(process.env.I18N_SYNC_FILES ?? true),
+      autoReload: toBoolean(process.env.I18N_AUTO_RELOAD ?? false),
+      updateFiles: toBoolean(process.env.I18N_UPDATE_FILES ?? true),
       api: {
         __: 't',
         __n: 'tn',
@@ -288,7 +306,7 @@ class I18N {
 
     // dummy-proof in case middleware is not in correct order
     // (e.g. i18n.middleware -> i18n.redirect)
-    if (typeof ctx.request.locale === 'undefined')
+    if (ctx.request.locale === undefined)
       throw new Error(
         'Route middleware out of order, please use i18n.middleware BEFORE i18n.redirect'
       );

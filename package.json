@@ -1,7 +1,7 @@
 {
   "name": "@ladjs/i18n",
   "description": "i18n wrapper and Koa middleware for Lad",
-  "version": "9.0.0",
+  "version": "9.0.1",
   "author": "Nick Baugh <niftylettuce@gmail.com> (http://niftylettuce.com/)",
   "bugs": {
     "url": "https://github.com/ladjs/i18n/issues",
@@ -13,36 +13,35 @@
   ],
   "dependencies": {
     "@ladjs/country-language": "^1.0.1",
-    "boolean": "3.2.0",
     "i18n": "^0.15.0",
     "i18n-locales": "^0.0.5",
     "lodash": "^4.17.21",
     "multimatch": "5",
-    "punycode": "^2.1.1",
-    "qs": "^6.11.0",
+    "punycode": "^2.3.1",
+    "qs": "^6.14.0",
     "titleize": "2",
-    "tlds": "^1.231.0"
+    "tlds": "^1.261.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.0.3",
-    "@commitlint/config-conventional": "^17.0.3",
-    "ava": "^4.3.0",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "ava": "^5.3.1",
     "cross-env": "^7.0.3",
-    "eslint": "8.39.0",
+    "eslint": "8.57.1",
     "eslint-config-xo-lass": "2.0.1",
     "fixpack": "^4.0.0",
-    "husky": "^8.0.1",
-    "koa": "^2.13.4",
+    "husky": "^9.1.7",
+    "koa": "^2.16.3",
     "koa-generic-session": "^2.3.0",
-    "nyc": "^15.1.0",
+    "nyc": "^17.1.0",
     "remark-cli": "^11.0.0",
     "remark-preset-github": "^4.0.4",
-    "sinon": "^14.0.0",
-    "supertest": "^6.2.4",
-    "xo": "0.53.1"
+    "sinon": "^19.0.5",
+    "supertest": "^7.1.4",
+    "xo": "0.56.0"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "files": [
     "index.js"
@@ -66,7 +65,7 @@
   },
   "scripts": {
     "lint": "xo --fix && remark . -qfo && fixpack",
-    "prepare": "husky install",
+    "prepare": "husky",
     "pretest": "npm run lint",
     "test": "cross-env NODE_ENV=test nyc ava"
   }

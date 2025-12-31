@@ -1,5 +1,4 @@
 const { resolve } = require('node:path');
-
 const { toASCII } = require('punycode/');
 const Koa = require('koa');
 const request = require('supertest');
@@ -7,7 +6,6 @@ const session = require('koa-generic-session');
 const sinon = require('sinon');
 const test = require('ava');
 const tlds = require('tlds');
-
 const I18N = require('..');
 
 const phrases = { HELLO: 'Hello there!', hello: 'hello' };
